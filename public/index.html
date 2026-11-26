@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompt Aid — Review your prompt</title>
+<style>
+:root{color-scheme:light;--ink:#142a2a;--muted:#687a76;--line:#dbe4dc;--canvas:#f0f3ee;--green:#175449;--lime:#ddedc3;--paper:#fff;--serif:Georgia,'Times New Roman',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}.wrap{max-width:920px;margin:0 auto;padding:28px 24px 40px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #cad8ce;padding-bottom:16px}.brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:750;letter-spacing:-.03em}.brand-mark{height:29px;width:29px;border-radius:9px;background:var(--green);display:grid;place-items:center;color:#e5f4db;font-family:var(--serif);font-size:18px;font-weight:400}.tag{font-size:11px;color:#567266;font-weight:650;letter-spacing:.08em;text-transform:uppercase}.intro{display:flex;justify-content:space-between;align-items:end;gap:20px;padding:29px 0 22px}.eyebrow{color:#58816d;font-size:11px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin:0 0 9px}h1{font-family:var(--serif);font-weight:400;letter-spacing:-.045em;font-size:clamp(29px,4vw,42px);line-height:1.08;margin:0}.lead{color:#60766b;font-size:14px;margin:9px 0 0;line-height:1.55}.example{border:1px solid #b8cabe;background:transparent;color:#325a49;font-weight:650;white-space:nowrap;border-radius:8px;padding:10px 13px;cursor:pointer;font-size:12px}.example:hover{background:#e2ebe1}.grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper);box-shadow:0 12px 38px #264b3510}.pane{padding:22px;min-width:0}.pane+.pane{border-left:1px solid var(--line);background:#fbfcf9}.pane-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.label{font-size:13px;font-weight:750}.pane-number{font-family:var(--serif);font-size:13px;color:#8da398}.description{font-size:12px;color:var(--muted);margin:0 0 12px;line-height:1.45;min-height:34px}textarea{display:block;width:100%;min-height:210px;resize:vertical;border:1px solid #d6e2d9;border-radius:9px;background:#fff;color:#233c35;font:14px/1.65 var(--sans);padding:14px;outline:none}textarea:focus{border-color:#418369;box-shadow:0 0 0 3px #4a9c7220}textarea::placeholder{color:#9baea3}.assist{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:18px 20px;background:#f9fbf7}.assist-head{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:750}.spark{font-size:15px;color:#367455}.assist-note{font-size:12px;color:#75877e;margin:8px 0 0;line-height:1.5}.details-list{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:7px;color:#50685d;font-size:13px;line-height:1.45}.details-list li{display:flex;gap:9px}.details-list li:before{content:'↳';color:#639278}.questions-title{font-size:12px;font-weight:700;color:#526c60;margin:15px 0 0}.footer{display:flex;justify-content:space-between;align-items:center;gap:15px;padding-top:20px}.helper{color:#71847a;font-size:12px;line-height:1.5;margin:0}.copy{background:var(--green);color:#fff;border:0;border-radius:9px;padding:12px 17px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}.copy:hover{background:#0d4037}.copy:disabled{opacity:.45;cursor:not-allowed}.button-group{display:flex;gap:8px;flex-wrap:wrap}.run{background:#dcebcf;color:#173e2d;border:1px solid #b5cfaa;border-radius:9px;padding:12px 17px;font-size:13px;font-weight:700;cursor:pointer}.run:disabled{opacity:.45;cursor:not-allowed}.status{font-size:12px;color:#2e6c54;min-height:18px;margin:9px 0 0;text-align:right}@media(max-width:620px){.wrap{padding:20px 16px 28px}.intro{align-items:start;flex-direction:column;gap:16px;padding-top:24px}.grid{grid-template-columns:1fr}.pane+.pane{border-left:0;border-top:1px solid var(--line)}textarea{min-height:150px}.footer{align-items:flex-start;flex-direction:column}.status{text-align:left}}
+
+.window-button{border:1px solid #b8cabe;background:transparent;color:#325a49;font:600 12px var(--sans);border-radius:7px;padding:8px 10px;cursor:pointer}.window-button:disabled{opacity:.5;cursor:not-allowed}.view-note{font-size:11px;color:#687a76;margin:8px 0 0}.top-actions{display:flex;align-items:center;gap:10px}.compact .wrap{padding:14px}.compact .intro{padding:15px 0 12px}.compact h1{font-size:24px}.compact .intro .eyebrow,.compact .lead,.compact .pane-number,.compact .description,.compact .tag,.compact .example,.compact .helper{display:none}.compact .grid{grid-template-columns:1fr}.compact .pane{padding:10px}.compact .pane+.pane{border-left:0;border-top:1px solid var(--line)}.compact textarea{min-height:85px;font-size:13px;padding:9px}.compact .pane-top{margin-bottom:6px}.compact .assist{margin-top:10px;padding:10px}.compact .footer{padding-top:12px;justify-content:flex-end}.compact .copy,.compact .run{padding:9px 12px}.compact .status{text-align:left}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top"><div class="brand"><span class="brand-mark" aria-hidden="true">p</span>Prompt Aid</div><div class="top-actions"><span class="tag">Review, then use</span><button class="window-button" id="small-window" type="button" disabled>Small window ↗</button></div></header><p class="view-note" id="view-note" role="status" aria-live="polite">Checking floating-window support…</p>
+  <section class="intro"><div><p class="eyebrow">A little more clarity</p><h1>Make your intent clear.</h1><p class="lead">A thoughtful first draft for your next coding request.</p></div><button class="example" id="example" type="button">Load example ↗</button></section>
+  <section class="grid" aria-label="Prompt comparison">
+    <div class="pane"><div class="pane-top"><label class="label" for="original">Your original prompt</label><span class="pane-number">01</span></div><p class="description">Start with what you want to accomplish.</p><textarea id="original" placeholder="Your original request appears here."></textarea></div>
+    <div class="pane"><div class="pane-top"><label class="label" for="improved">Suggested draft</label><span class="pane-number">02</span></div><p class="description">Review and edit this before using it.</p><textarea id="improved" placeholder="The assistant’s suggested prompt appears here."></textarea></div>
+  </section>
+  <section class="assist" aria-labelledby="notes-title"><div class="assist-head" id="notes-title"><span class="spark" aria-hidden="true">✳</span> Review notes</div><p class="assist-note" id="notes-empty">Changes and optional questions appear here when an assistant sends a draft.</p><ul class="details-list" id="changes"></ul><p class="questions-title" id="questions-title" hidden>Things you might clarify</p><ul class="details-list" id="questions"></ul><p class="questions-title" id="limitations-title" hidden>Context and limitations</p><ul class="details-list" id="limitations"></ul></section>
+  <div class="footer"><p class="helper">Your prompt stays yours. Adjust the draft before copying it.</p><div class="button-group"><button class="copy" id="copy" type="button" disabled>Copy suggested prompt <span aria-hidden="true">↗</span></button><button class="run" id="run" type="button" disabled>Run in chat →</button></div></div><p class="status" id="status" role="status" aria-live="polite"></p>
+</main>
+<script type="module">
+const original=document.querySelector('#original'), improved=document.querySelector('#improved'), copy=document.querySelector('#copy'), run=document.querySelector('#run'), status=document.querySelector('#status');
+const changes=document.querySelector('#changes'), questions=document.querySelector('#questions'), title=document.querySelector('#questions-title'), limitations=document.querySelector('#limitations'), limitationsTitle=document.querySelector('#limitations-title'), empty=document.querySelector('#notes-empty');
+const demo={original:'Make the dashboard look better, but keep everything working.', improved:'Improve the dashboard’s visual design and readability. Preserve the existing functionality, data, and user interactions. Review the current layout, make the design changes, and verify that the existing controls still work.', changes:['Clarified that the work is focused on design and readability.','Kept the existing functionality and interactions as a constraint.','Added a check that existing controls still work.'],questions:['Is there a visual style or reference you want to follow?'],limitations:['The current design has not been inspected in this example.']};
+let canSend=false, initialized=false, requestId=1, pendingId=null, pendingTimer=null;
+const smallWindow=document.querySelector('#small-window'), viewNote=document.querySelector('#view-note');
+let supportedModes=[], displayMode='inline', displayRequest=null, displayTarget=null, displayTimer=null;
+function updateView(context={}){if(Array.isArray(context.availableDisplayModes))supportedModes=context.availableDisplayModes;if(context.displayMode)displayMode=context.displayMode;document.body.classList.toggle('compact',displayMode==='pip');smallWindow.disabled=!initialized||displayRequest!==null||!(supportedModes.includes(displayMode==='pip'?'inline':'pip'));smallWindow.textContent=displayMode==='pip'?'Return to chat':'Small window ↗';if(initialized&&!supportedModes.includes('pip')&&displayMode!=='pip'){viewNote.hidden=false;viewNote.textContent='A small floating window is not available in this host.';}else{viewNote.hidden=true;viewNote.textContent='';}}
+function requestView(mode){if(displayRequest!==null||!supportedModes.includes(mode))return;displayRequest=++requestId;displayTarget=mode;updateView();window.parent.postMessage({jsonrpc:'2.0',id:displayRequest,method:'ui/request-display-mode',params:{mode}},'*');displayTimer=setTimeout(()=>{displayRequest=null;updateView();viewNote.hidden=false;viewNote.textContent='The host did not open a small window. The review remains here.';},5000);}
+smallWindow.addEventListener('click',()=>requestView(displayMode==='pip'?'inline':'pip'));
+function updateButtons(){copy.disabled=!improved.value.trim();run.disabled=!canSend||!improved.value.trim()||pendingId!==null;}
+function list(node,items){node.replaceChildren();for(const item of Array.isArray(items)?items:[]){if(typeof item!=='string')continue;const li=document.createElement('li');li.textContent=item;node.append(li);}}
+function display(data){if(!data||typeof data.original!=='string'||typeof data.improved!=='string')return;original.value=data.original;improved.value=data.improved;list(changes,data.changes);list(questions,data.questions);list(limitations,data.limitations);title.hidden=!questions.children.length;limitationsTitle.hidden=!limitations.children.length;empty.hidden=!!(changes.children.length||questions.children.length||limitations.children.length);updateButtons();status.textContent=initialized&&!canSend?'This host has not enabled sending to chat. You can copy the prompt.':'';}
+document.querySelector('#example').addEventListener('click',()=>display(demo));
+improved.addEventListener('input',()=>{updateButtons();status.textContent=initialized&&!canSend?'This host has not enabled sending to chat. You can copy the prompt.':'';});
+copy.addEventListener('click',async()=>{const value=improved.value;if(!value.trim())return;try{if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText(value);status.textContent='Copied to clipboard.';}catch{improved.focus();improved.select();status.textContent='Selected the text. Use your keyboard to copy it.';}});
+// Sending is only enabled when the host advertises text messages.
+run.addEventListener('click',()=>{
+  const text=improved.value.trim();if(!text||!canSend||pendingId!==null)return;
+  pendingId=++requestId;updateButtons();status.textContent='Sending to the chat…';
+  window.parent.postMessage({jsonrpc:'2.0',id:pendingId,method:'ui/message',params:{role:'user',content:[{type:'text',text}]}},'*');
+  pendingTimer=setTimeout(()=>{pendingId=null;canSend=false;updateButtons();status.textContent='The host did not confirm delivery. Check the conversation before retrying.';},10000);
+});
+if(window.parent!==window){
+  const handshakeTimeout=setTimeout(()=>{if(!initialized){viewNote.hidden=false;viewNote.textContent='Could not check floating-window support in this view.';}},5000);
+  window.addEventListener('message',event=>{
+    if(event.source!==window.parent)return;const msg=event.data;if(!msg||msg.jsonrpc!=='2.0')return;
+    if(msg.method==='ui/notifications/tool-result')display(msg.params?.structuredContent);
+    if(msg.method==='ui/notifications/host-context-changed')updateView(msg.params);
+    if(msg.id===1){
+      if(msg.error){status.textContent='The host could not initialize this review card.';return;}
+      clearTimeout(handshakeTimeout);initialized=true;canSend=!!msg.result?.hostCapabilities?.message?.text;
+      window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*');
+      updateButtons();updateView(msg.result?.hostContext||{});if(!canSend)status.textContent='This host has not enabled sending to chat. You can copy the prompt.';
+      if(supportedModes.includes('pip')&&displayMode!=='pip')requestView('pip');
+    }else if(displayRequest!==null&&msg.id===displayRequest){
+      clearTimeout(displayTimer);const requested=displayTarget;displayRequest=null;displayTarget=null;if(msg.error||!msg.result?.mode){updateView();viewNote.hidden=false;viewNote.textContent='The host could not open a small window. The review remains here.';}else{updateView({displayMode:msg.result.mode});if(msg.result.mode!==requested){viewNote.hidden=false;viewNote.textContent='The host kept the review in its current view.';}}
+    }else if(pendingId!==null&&msg.id===pendingId){
+      clearTimeout(pendingTimer);pendingId=null;
+      if(msg.error||!msg.result||msg.result.isError){status.textContent='The host did not accept the prompt. You can copy it instead.';updateButtons();}
+      else{canSend=false;updateButtons();status.textContent='The host accepted the prompt. Check the conversation for the next step.';}
+    }
+  });
+  window.parent.postMessage({jsonrpc:'2.0',id:1,method:'ui/initialize',params:{appInfo:{name:'prompt-aid',version:'0.1.0'},appCapabilities:{},protocolVersion:'2026-01-26'}},'*');
+  if(window.openai?.toolOutput)display(window.openai.toolOutput);
+  window.addEventListener('openai:set_globals',event=>{if(event.detail?.globals?.toolOutput)display(event.detail.globals.toolOutput);});
+}else{viewNote.textContent='Floating view is available only inside a compatible host.';}
+
+</script>
+</body>
+</html>
