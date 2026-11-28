@@ -175,6 +175,7 @@ import SwiftUI
 @MainActor final class BuildAppDelegate: NSObject,NSApplicationDelegate,NSWindowDelegate {
     let session = BuildSession();var window: NSWindow?
     func applicationDidFinishLaunching(_ notification:Notification) {
+        installEditingMenu()
         let window = NSWindow(contentRect:NSRect(x:0,y:0,width:1000,height:800),styleMask:[.titled,.closable,.miniaturizable,.resizable],backing:.buffered,defer:false)
         window.title = "Prompt Aid · Build";window.contentViewController = NSHostingController(rootView:BuildView(session:session));window.minSize = NSSize(width:800,height:650);window.delegate = self;window.center();window.makeKeyAndOrderFront(nil);self.window = window;NSApp.activate(ignoringOtherApps:true)
     }

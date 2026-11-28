@@ -20,7 +20,7 @@ def main():
             }
         }''')
   (tmp/'PromptAid.swift').write_text(source)
-  files=[str(ROOT/'native'/name) for name in ['ServiceClient.swift','ReviewProtocol.swift']]+[str(tmp/'PromptAid.swift')]
+  files=[str(ROOT/'native'/name) for name in ['ServiceClient.swift','ReviewProtocol.swift','EditingMenu.swift']]+[str(tmp/'PromptAid.swift')]
   cmd=['xcrun','swiftc','-target',os.uname().machine+'-apple-macos13.0']+([] if a.baseline else ['-O'])+files+['-o',str(tmp/'PromptAid'),'-framework','AppKit','-framework','SwiftUI']
   subprocess.run(cmd,check=True)
   payload=tmp/'review.json';payload.write_text(json.dumps({'original':'Add a search filter to saved designs.','improved':'Add a search filter to saved designs while preserving account isolation.','evidence':[],'changes':[],'questions':[],'limitations':[]}));payload.chmod(0o600)

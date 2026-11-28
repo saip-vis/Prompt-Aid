@@ -398,6 +398,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     var window: NSWindow?
     init(session: ReviewSession) { self.session = session }
     func applicationDidFinishLaunching(_ notification: Notification) {
+        installEditingMenu()
         let view = ReviewView(session: session)
         // This switch lets a local layout check start the window at its minimum size.
         let minimumPreview = ProcessInfo.processInfo.environment["PROMPT_AID_TEST_MINIMUM"] == "1"
