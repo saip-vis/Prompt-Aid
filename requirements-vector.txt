@@ -1,0 +1,2 @@
+# Optional Qdrant in-memory vector experiment; baseline retrieval uses stdlib only.
+qdrant-client==1.20.0

@@ -20,6 +20,7 @@
     <div class="pane"><div class="pane-top"><label class="label" for="improved">Suggested draft</label><span class="pane-number">02</span></div><p class="description">Review and edit this before using it.</p><textarea id="improved" placeholder="The assistant’s suggested prompt appears here."></textarea></div>
   </section>
   <section class="assist" aria-labelledby="notes-title"><div class="assist-head" id="notes-title"><span class="spark" aria-hidden="true">✳</span> Review notes</div><p class="assist-note" id="notes-empty">Changes and optional questions appear here when an assistant sends a draft.</p><ul class="details-list" id="changes"></ul><p class="questions-title" id="questions-title" hidden>Things you might clarify</p><ul class="details-list" id="questions"></ul><p class="questions-title" id="limitations-title" hidden>Context and limitations</p><ul class="details-list" id="limitations"></ul></section>
+  <section class="assist" id="source-section" hidden><div class="assist-head">Source excerpts</div><p class="assist-note">Reported source text; not verified in this card. Model interpretations remain unverified.</p><div id="sources"></div><ul class="details-list" id="evidence"></ul><p class="questions-title" id="assumptions-title" hidden>Assumptions, not verified facts</p><ul class="details-list" id="assumptions"></ul></section>
   <div class="footer"><p class="helper">Your prompt stays yours. Adjust the draft before copying it.</p><div class="button-group"><button class="copy" id="copy" type="button" disabled>Copy suggested prompt <span aria-hidden="true">↗</span></button><button class="run" id="run" type="button" disabled>Run in chat →</button></div></div><p class="status" id="status" role="status" aria-live="polite"></p>
 </main>
 <script type="module">
@@ -34,7 +35,22 @@ function requestView(mode){if(displayRequest!==null||!supportedModes.includes(mo
 smallWindow.addEventListener('click',()=>requestView(displayMode==='pip'?'inline':'pip'));
 function updateButtons(){copy.disabled=!improved.value.trim();run.disabled=!canSend||!improved.value.trim()||pendingId!==null;}
 function list(node,items){node.replaceChildren();for(const item of Array.isArray(items)?items:[]){if(typeof item!=='string')continue;const li=document.createElement('li');li.textContent=item;node.append(li);}}
-function display(data){if(!data||typeof data.original!=='string'||typeof data.improved!=='string')return;original.value=data.original;improved.value=data.improved;list(changes,data.changes);list(questions,data.questions);list(limitations,data.limitations);title.hidden=!questions.children.length;limitationsTitle.hidden=!limitations.children.length;empty.hidden=!!(changes.children.length||questions.children.length||limitations.children.length);updateButtons();status.textContent=initialized&&!canSend?'This host has not enabled sending to chat. You can copy the prompt.':'';}
+function displaySources(data){
+ const section=document.querySelector('#source-section'),node=document.querySelector('#sources');node.replaceChildren();
+ list(document.querySelector('#evidence'),data.evidence);list(document.querySelector('#assumptions'),data.assumptions);
+ document.querySelector('#assumptions-title').hidden=!document.querySelector('#assumptions').children.length;
+ for(const source of Array.isArray(data.sources)?data.sources:[]){
+  if(typeof source.path!=='string'||typeof source.excerpt!=='string')continue;
+  const detail=document.createElement('details'),summary=document.createElement('summary'),pre=document.createElement('pre');
+  summary.textContent=`${source.path}:${source.line_start}-${source.line_end}`;
+  pre.textContent=source.excerpt;pre.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;max-height:200px;overflow:auto';
+  detail.append(summary,pre);
+  if(source.claim){const claim=document.createElement('p');claim.textContent='Model interpretation (unverified): '+source.claim;detail.append(claim);}
+  node.append(detail);
+ }
+ section.hidden=!(node.children.length||document.querySelector('#evidence').children.length||document.querySelector('#assumptions').children.length);
+}
+function display(data){if(!data||typeof data.original!=='string'||typeof data.improved!=='string')return;displaySources(data);original.value=data.original;improved.value=data.improved;list(changes,data.changes);list(questions,data.questions);list(limitations,data.limitations);title.hidden=!questions.children.length;limitationsTitle.hidden=!limitations.children.length;empty.hidden=!!(changes.children.length||questions.children.length||limitations.children.length);updateButtons();status.textContent=initialized&&!canSend?'This host has not enabled sending to chat. You can copy the prompt.':'';}
 document.querySelector('#example').addEventListener('click',()=>display(demo));
 improved.addEventListener('input',()=>{updateButtons();status.textContent=initialized&&!canSend?'This host has not enabled sending to chat. You can copy the prompt.':'';});
 copy.addEventListener('click',async()=>{const value=improved.value;if(!value.trim())return;try{if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText(value);status.textContent='Copied to clipboard.';}catch{improved.focus();improved.select();status.textContent='Selected the text. Use your keyboard to copy it.';}});

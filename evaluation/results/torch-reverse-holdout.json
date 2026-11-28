@@ -1,0 +1,266 @@
+{
+  "dataset": "hand-authored synthetic fixtures; no external training data",
+  "train_project": "harbor",
+  "held_out_project": "cedar",
+  "training": {
+    "pairs": 3,
+    "train_queries": 9,
+    "uncovered_train_queries": [
+      "harbor-semantic-upload"
+    ],
+    "epochs": 100,
+    "seed": 7
+  },
+  "torch_version": "2.12.1",
+  "baseline_bm25": {
+    "queries": 8,
+    "positive_queries": 8,
+    "recall_at_1": 0.75,
+    "recall_at_3": 0.75,
+    "mrr": 0.75,
+    "no_match_queries": 0,
+    "no_match_abstention": null,
+    "results": [
+      {
+        "id": "cedar-visual",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [
+          "src/layout.css"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-login",
+        "project": "cedar",
+        "expected": [
+          "src/login.js"
+        ],
+        "top": [
+          "src/login.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-search",
+        "project": "cedar",
+        "expected": [
+          "src/search.js"
+        ],
+        "top": [
+          "src/search.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-cart",
+        "project": "cedar",
+        "expected": [
+          "src/cart.js"
+        ],
+        "top": [
+          "src/cart.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-auth-wording",
+        "project": "cedar",
+        "expected": [
+          "src/login.js"
+        ],
+        "top": [
+          "src/login.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-layout-wording",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [
+          "src/layout.css"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-semantic-layout",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "cedar-semantic-checkout",
+        "project": "cedar",
+        "expected": [
+          "src/cart.js"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      }
+    ]
+  },
+  "torch_reranker": {
+    "queries": 8,
+    "positive_queries": 8,
+    "recall_at_1": 0.75,
+    "recall_at_3": 0.75,
+    "mrr": 0.75,
+    "no_match_queries": 0,
+    "no_match_abstention": null,
+    "results": [
+      {
+        "id": "cedar-visual",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [
+          "src/layout.css"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-login",
+        "project": "cedar",
+        "expected": [
+          "src/login.js"
+        ],
+        "top": [
+          "src/login.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-search",
+        "project": "cedar",
+        "expected": [
+          "src/search.js"
+        ],
+        "top": [
+          "src/search.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-cart",
+        "project": "cedar",
+        "expected": [
+          "src/cart.js"
+        ],
+        "top": [
+          "src/cart.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-auth-wording",
+        "project": "cedar",
+        "expected": [
+          "src/login.js"
+        ],
+        "top": [
+          "src/login.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-layout-wording",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [
+          "src/layout.css"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-semantic-layout",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "cedar-semantic-checkout",
+        "project": "cedar",
+        "expected": [
+          "src/cart.js"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      }
+    ]
+  },
+  "limitations": [
+    "Small synthetic benchmark; not evidence of real-world improvement.",
+    "Reranker can only reorder lexical candidates and cannot recover documents missed by candidate retrieval.",
+    "Experimental model is not used by the skill by default."
+  ]
+}

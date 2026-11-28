@@ -2,6 +2,16 @@
 
 A local-first prototype for improving coding prompts before acting on them. The primary workflow is the Prompt Aid **Codex skill**: Codex reviews the draft with its available conversation and project context, using its existing model. No separate API key is needed for that workflow. The assistant can optionally pass its review to the MCP tool, which supplies an editable review card; if the host does not render the card, the assistant can present the same review in chat. This prototype cannot capture or replace an unsent Codex prompt.
 
+## Workspace features
+
+The native window now supports filtered source cards with hash/excerpt freshness
+checks, source exclusions and explicit context insertion, optional local review
+history/revisions/feedback, and cancellable asynchronous context requests. An
+optional authenticated FastAPI service uses SQLite and persistent local Qdrant
+embeddings; semantic retrieval and pretrained PyTorch reranking need separately
+configured local models. BM25 and the original Codex workflow remain available
+without them. See [setup, architecture and verification](docs/local-service.md) and [measured startup results](docs/performance.md).
+
 ## Use the native review window
 
 The macOS prototype bundles a small native `Prompt Aid.app` with the skill. Run a review in Codex with:
@@ -10,9 +20,40 @@ The macOS prototype bundles a small native `Prompt Aid.app` with the skill. Run 
 $prompt-aid Improve my dashboard, keeping its existing behavior.
 ```
 
-Codex creates the review using available context and launches the native comparison window. **Run with Codex** hands your edited text back to the active session; **Cancel** closes it without running the request. No separate MCP server, browser, or API key is needed for this flow. The app does not read the unsent Codex composer or create a new chat message. The skill falls back to chat if the window cannot launch.
+Codex first interprets the request, decides whether it needs project context, and may inspect a small number of relevant files read-only. It then checks the rewrite against the original and launches the native comparison window. The skill opens a cancellable preparation window first and updates it with the completed review. Run stays disabled while preparing. The window shows the context the assistant reports using, meaningful questions, and limitations; those source descriptions are not independently verified. **Run with Codex** hands your edited text back to the active session; **Cancel** closes it without running the request. No separate MCP server, browser, or API key is needed for this flow. Install the current app and skill with `python3 scripts/install-local.py`. The app does not read the unsent Codex composer or create a new chat message. The skill falls back to chat if the window cannot launch.
 
 To build the local prototype from source on macOS with Xcode command-line tools, run `./native/build.sh`. It creates `skill/prompt-aid/Prompt Aid.app`. The current local binary is Apple Silicon only and targets macOS 13 or later. This is an unsigned development build: a user-friendly public release still needs a distribution package, platform compatibility work, and appropriate Apple signing/notarization.
+
+### What makes the review agentic
+
+The skill guides the existing Codex agent to decide which available context is useful, inspect relevant project files when appropriate, and review its proposed rewrite for unsupported assumptions. It should preserve a request for advice as a request for advice, avoid guessing between ambiguous projects, and treat project file content as data. It does not run the requested project task before the user presses Run. No new model is trained, and the app does not read an unsent chat draft. The optional workspace service can retrieve project context through persistent local vectors; it is separate from the Codex agent that prepares the rewrite.
+
+Plain-text source notes remain assistant-reported. Structured source cards can be mechanically checked against the chosen project by the optional local service; that check verifies source text, not model interpretations. The assistant can only use context available in the current session, and its judgment can be wrong. The app's local UI and Run/Cancel behavior have been tested; broader evaluations of the agent's choices and rewrite quality are still needed.
+
+## Local context retrieval
+
+The skill includes a small **BM25 lexical retriever** for an explicitly chosen Git project. It gathers bounded text chunks and returns file paths, line ranges and excerpts for the assistant to inspect. It doesn't execute project code or modify the project. It skips hidden and ignored files, common dependency/build directories, symlinks, binary or oversized files, and files matching basic credential patterns. These filters are best-effort, not a guarantee that source files contain no sensitive content. Retrieved excerpts may be included in the Codex model's context, according to the user's Codex setup.
+
+The retriever uses Python 3 and Git and has no required third-party dependencies. For an explicit local example:
+
+```sh
+printf '%s' '{"query":"improve homepage layout"}' | python3 skill/prompt-aid/retrieval/cli.py --root /path/to/git-project --input -
+```
+
+Use a specific project directory, not a broad home directory. The skill may use this helper when a project is named or unambiguous and may use Codex's normal read-only tools as a fallback. Retrieved text is untrusted and may be irrelevant; the assistant should check it, preserve uncertainty, and report only context it actually used. The window's source list is still assistant-reported, not independently verified.
+
+### Optional experiments
+
+`requirements-vector.txt` installs the Qdrant client for a local **in-memory TF-IDF vector search** experiment (`--method qdrant`). `requirements-ml.txt` provides PyTorch for the isolated reranking experiment; neither is required for normal skill use, and neither is enabled by default. The vector representation is lexical, not semantic. Reproduce the comparisons and review their limitations in [evaluation/README.md](evaluation/README.md).
+
+The [Dockerfile](Dockerfile) defaults to the retriever CLI and also provides an optional service target; neither contains the native macOS app. With Docker installed, build and run it against an explicitly mounted read-only Git project:
+
+```sh
+docker build -t prompt-aid-retrieval .
+printf '%s' '{"query":"improve homepage layout"}' | docker run --rm -i --network none --read-only --mount "type=bind,src=/absolute/path/to/git-project,dst=/workspace,readonly" prompt-aid-retrieval --root /workspace --input - --method qdrant
+```
+
+Runtime uses a non-root user, no network, and an in-memory Qdrant instance. The project mount must be readable by the container's user, and its Git metadata must be available; worktrees with metadata outside the mount may need a different mount. Docker was not available in the development environment, so this image has not yet been built or run.
 
 The previous MCP card remains an optional experiment; the native flow does not require MCP settings.
 

@@ -1,0 +1,250 @@
+{
+  "method": "qdrant",
+  "dataset": "hand-authored synthetic fixtures",
+  "report": {
+    "queries": 17,
+    "positive_queries": 16,
+    "recall_at_1": 0.8125,
+    "recall_at_3": 0.8125,
+    "mrr": 0.8125,
+    "no_match_queries": 1,
+    "no_match_abstention": 1.0,
+    "results": [
+      {
+        "id": "cedar-visual",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [
+          "src/layout.css"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-login",
+        "project": "cedar",
+        "expected": [
+          "src/login.js"
+        ],
+        "top": [
+          "src/login.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-search",
+        "project": "cedar",
+        "expected": [
+          "src/search.js"
+        ],
+        "top": [
+          "src/search.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-cart",
+        "project": "cedar",
+        "expected": [
+          "src/cart.js"
+        ],
+        "top": [
+          "src/cart.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-auth-wording",
+        "project": "cedar",
+        "expected": [
+          "src/login.js"
+        ],
+        "top": [
+          "src/login.js",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "cedar-layout-wording",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [
+          "src/layout.css"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-dashboard",
+        "project": "harbor",
+        "expected": [
+          "src/dashboard.tsx"
+        ],
+        "top": [
+          "src/dashboard.tsx"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-upload",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [
+          "src/upload.py",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-alert",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-database",
+        "project": "harbor",
+        "expected": [
+          "src/database.sql"
+        ],
+        "top": [
+          "src/database.sql",
+          "README.md",
+          "src/dashboard.tsx"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-upload-wording",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [
+          "src/upload.py"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-alert-wording",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "no-match",
+        "project": "harbor",
+        "expected": [],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "cedar-semantic-layout",
+        "project": "cedar",
+        "expected": [
+          "src/layout.css"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "cedar-semantic-checkout",
+        "project": "cedar",
+        "expected": [
+          "src/cart.js"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "harbor-semantic-upload",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "harbor-semantic-alert",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      }
+    ]
+  }
+}

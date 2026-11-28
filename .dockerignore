@@ -1,0 +1,11 @@
+.git
+.venv
+node_modules
+__pycache__
+*.pyc
+.env
+.env.*
+.models
+.build
+.prompt-aid
+*.sqlite3*

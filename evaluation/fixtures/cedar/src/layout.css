@@ -1,0 +1,3 @@
+/* Homepage visual hierarchy: spacing, typography, navigation and responsive layout */
+.page-header { display: flex; gap: 1rem; }
+@media (max-width: 600px) { .page-header { display: block; } }

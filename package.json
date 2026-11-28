@@ -7,7 +7,11 @@
   "scripts": {
     "start": "node server.mjs",
     "preview": "node preview.mjs",
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "service": "python3 -m backend.app",
+    "test:python": "python3 -m unittest discover -s test -p \"test_*.py\" -v",
+    "test:native": "swift test",
+    "build:native": "./native/build.sh"
   },
   "engines": {
     "node": ">=20"

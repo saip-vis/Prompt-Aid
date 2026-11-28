@@ -1,0 +1,136 @@
+[
+  {
+    "id": "cedar-visual",
+    "project": "cedar",
+    "query": "Improve homepage typography and responsive spacing",
+    "relevant": [
+      "src/layout.css"
+    ]
+  },
+  {
+    "id": "cedar-login",
+    "project": "cedar",
+    "query": "Fix login authentication for returning users",
+    "relevant": [
+      "src/login.js"
+    ]
+  },
+  {
+    "id": "cedar-search",
+    "project": "cedar",
+    "query": "Improve catalog keyword search filters",
+    "relevant": [
+      "src/search.js"
+    ]
+  },
+  {
+    "id": "cedar-cart",
+    "project": "cedar",
+    "query": "Calculate shopping cart checkout totals",
+    "relevant": [
+      "src/cart.js"
+    ]
+  },
+  {
+    "id": "cedar-auth-wording",
+    "project": "cedar",
+    "query": "Investigate a session login problem",
+    "relevant": [
+      "src/login.js"
+    ]
+  },
+  {
+    "id": "cedar-layout-wording",
+    "project": "cedar",
+    "query": "Review navigation layout on mobile",
+    "relevant": [
+      "src/layout.css"
+    ]
+  },
+  {
+    "id": "harbor-dashboard",
+    "project": "harbor",
+    "query": "Polish dashboard metric cards and spacing",
+    "relevant": [
+      "src/dashboard.tsx"
+    ]
+  },
+  {
+    "id": "harbor-upload",
+    "project": "harbor",
+    "query": "Reject oversized image upload files",
+    "relevant": [
+      "src/upload.py"
+    ]
+  },
+  {
+    "id": "harbor-alert",
+    "project": "harbor",
+    "query": "Fix email alert notification delivery",
+    "relevant": [
+      "src/alerts.ts"
+    ]
+  },
+  {
+    "id": "harbor-database",
+    "project": "harbor",
+    "query": "Improve database query performance for analytics events",
+    "relevant": [
+      "src/database.sql"
+    ]
+  },
+  {
+    "id": "harbor-upload-wording",
+    "project": "harbor",
+    "query": "Validate uploaded photos by file type",
+    "relevant": [
+      "src/upload.py"
+    ]
+  },
+  {
+    "id": "harbor-alert-wording",
+    "project": "harbor",
+    "query": "Configure push notification channels",
+    "relevant": [
+      "src/alerts.ts"
+    ]
+  },
+  {
+    "id": "no-match",
+    "project": "harbor",
+    "query": "Implement websocket kerberos negotiation",
+    "relevant": []
+  },
+  {
+    "id": "cedar-semantic-layout",
+    "project": "cedar",
+    "query": "Refresh the appearance of the landing screen",
+    "relevant": [
+      "src/layout.css"
+    ]
+  },
+  {
+    "id": "cedar-semantic-checkout",
+    "project": "cedar",
+    "query": "Let buyers settle orders",
+    "relevant": [
+      "src/cart.js"
+    ]
+  },
+  {
+    "id": "harbor-semantic-upload",
+    "project": "harbor",
+    "query": "Allow users to submit pictures",
+    "relevant": [
+      "src/upload.py"
+    ]
+  },
+  {
+    "id": "harbor-semantic-alert",
+    "project": "harbor",
+    "query": "Send people urgent messages",
+    "relevant": [
+      "src/alerts.ts"
+    ]
+  }
+]

@@ -1,0 +1,289 @@
+{
+  "dataset": "hand-authored synthetic fixtures; no external training data",
+  "train_project": "cedar",
+  "held_out_project": "harbor",
+  "training": {
+    "pairs": 4,
+    "train_queries": 8,
+    "uncovered_train_queries": [
+      "cedar-semantic-layout",
+      "cedar-semantic-checkout"
+    ],
+    "epochs": 100,
+    "seed": 7
+  },
+  "torch_version": "2.12.1",
+  "baseline_bm25": {
+    "queries": 9,
+    "positive_queries": 8,
+    "recall_at_1": 0.875,
+    "recall_at_3": 0.875,
+    "mrr": 0.875,
+    "no_match_queries": 1,
+    "no_match_abstention": 1.0,
+    "results": [
+      {
+        "id": "harbor-dashboard",
+        "project": "harbor",
+        "expected": [
+          "src/dashboard.tsx"
+        ],
+        "top": [
+          "src/dashboard.tsx"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-upload",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [
+          "src/upload.py",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-alert",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-database",
+        "project": "harbor",
+        "expected": [
+          "src/database.sql"
+        ],
+        "top": [
+          "src/database.sql",
+          "README.md",
+          "src/dashboard.tsx"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-upload-wording",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [
+          "src/upload.py"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-alert-wording",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "no-match",
+        "project": "harbor",
+        "expected": [],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "harbor-semantic-upload",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "harbor-semantic-alert",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      }
+    ]
+  },
+  "torch_reranker": {
+    "queries": 9,
+    "positive_queries": 8,
+    "recall_at_1": 0.875,
+    "recall_at_3": 0.875,
+    "mrr": 0.875,
+    "no_match_queries": 1,
+    "no_match_abstention": 1.0,
+    "results": [
+      {
+        "id": "harbor-dashboard",
+        "project": "harbor",
+        "expected": [
+          "src/dashboard.tsx"
+        ],
+        "top": [
+          "src/dashboard.tsx"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-upload",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [
+          "src/upload.py",
+          "README.md"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-alert",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-database",
+        "project": "harbor",
+        "expected": [
+          "src/database.sql"
+        ],
+        "top": [
+          "src/database.sql",
+          "README.md",
+          "src/dashboard.tsx"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-upload-wording",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [
+          "src/upload.py"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "harbor-alert-wording",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      },
+      {
+        "id": "no-match",
+        "project": "harbor",
+        "expected": [],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "harbor-semantic-upload",
+        "project": "harbor",
+        "expected": [
+          "src/upload.py"
+        ],
+        "top": [],
+        "reciprocal_rank": 0.0,
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "abstained": true
+      },
+      {
+        "id": "harbor-semantic-alert",
+        "project": "harbor",
+        "expected": [
+          "src/alerts.ts"
+        ],
+        "top": [
+          "src/alerts.ts"
+        ],
+        "reciprocal_rank": 1.0,
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "abstained": false
+      }
+    ]
+  },
+  "limitations": [
+    "Small synthetic benchmark; not evidence of real-world improvement.",
+    "Reranker can only reorder lexical candidates and cannot recover documents missed by candidate retrieval.",
+    "Experimental model is not used by the skill by default."
+  ]
+}

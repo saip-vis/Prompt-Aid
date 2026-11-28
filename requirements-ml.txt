@@ -1,0 +1,2 @@
+# Optional CPU PyTorch experiment; install a wheel appropriate for your platform.
+torch>=2.5,<3

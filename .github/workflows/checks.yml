@@ -1,0 +1,36 @@
+name: Prompt Aid checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: npm test
+      - run: pip install -r requirements-service.txt -r requirements-vector.txt
+      - run: python -m unittest discover -s test -p 'test_*.py' -v
+      - run: python evaluation/evaluate.py --method bm25
+      - name: Container retrieval smoke test
+        run: |
+          docker build --target retriever -t prompt-aid-retrieval .
+          cp -R evaluation/fixtures/cedar "$RUNNER_TEMP/fixture"
+          git init -q "$RUNNER_TEMP/fixture"
+          printf '%s' '{"query":"login authentication"}' | docker run --rm -i --network none --read-only --mount "type=bind,src=$RUNNER_TEMP/fixture,dst=/workspace,readonly" prompt-aid-retrieval --root /workspace --input - --method qdrant > "$RUNNER_TEMP/result.json"
+          python -c 'import json,sys; r=json.load(open(sys.argv[1])); assert r["results"]; assert r["method"]=="qdrant"' "$RUNNER_TEMP/result.json"
+      - name: Build service container
+        run: docker build --target service -t prompt-aid-service .
+  native:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift test
+      - run: ./native/build.sh

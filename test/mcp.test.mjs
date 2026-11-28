@@ -19,6 +19,14 @@ test('MCP server exposes a review card and preserves the assistant’s draft',as
     const result=await client.callTool({name:'review_prompt',arguments:input});
     assert.equal(result.isError,undefined);
     assert.deepEqual(result.structuredContent,input);
+    assert.ok(tools.some(t=>t.name==='retrieve_context'));
+    const unavailable=await client.callTool({name:'retrieve_context',arguments:{root:'/unconfigured-project',query:'login'}});
+    assert.equal(unavailable.isError,true);
+    const source={path:'login.py',line_start:1,line_end:2,content_hash:'a'.repeat(64),excerpt:'example',claim:'Model interpretation'};
+    const grounded=await client.callTool({name:'review_prompt',arguments:{...input,sources:[{...source,status:'verified'}],assumptions:['Needs investigation']}});
+    assert.deepEqual(grounded.structuredContent.sources,[source],'caller-supplied verification status is not trusted');
+    const badRange=await client.callTool({name:'review_prompt',arguments:{...input,sources:[{...source,line_end:0}]}});
+    assert.equal(badRange.isError,true);
     const legacy=await client.callTool({name:'review_prompt',arguments:{original:'A',improved:'B'}});
     assert.deepEqual(legacy.structuredContent.limitations,[],'limitations remain optional');
     const invalid=await client.callTool({name:'review_prompt',arguments:{...input,original:''}});
