@@ -67,8 +67,10 @@ def context(data,limit,workspace=False):
     return result
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['open','publish','context']);p.add_argument('--review-file',type=Path);p.add_argument('--metrics',type=Path);p.add_argument('--workspace',action='store_true',help='Use configured service; default avoids service overhead for one-off reviews');p.add_argument('--limit',type=int,choices=range(1,6),default=3);args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('action',choices=['open','publish','context','build']);p.add_argument('--review-file',type=Path);p.add_argument('--metrics',type=Path);p.add_argument('--workspace',action='store_true',help='Use configured service; default avoids service overhead for one-off reviews');p.add_argument('--limit',type=int,choices=range(1,6),default=3);args=p.parse_args()
     try:
+        if args.action=='build':
+            return subprocess.run([str(HERE/'Prompt Aid.app/Contents/MacOS/PromptAid'),'--build']).returncode
         data=read_input()
         if args.action=='open':open_review(data,args.metrics)
         elif args.action=='publish':

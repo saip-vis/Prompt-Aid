@@ -1,6 +1,6 @@
 {
   "name": "prompt-aid",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "A review card and MCP tool for refining coding prompts.",
@@ -11,7 +11,8 @@
     "service": "python3 -m backend.app",
     "test:python": "python3 -m unittest discover -s test -p \"test_*.py\" -v",
     "test:native": "swift test",
-    "build:native": "./native/build.sh"
+    "build:native": "./native/build.sh",
+    "build:workspace": "python3 skill/prompt-aid/review.py build"
   },
   "engines": {
     "node": ">=20"

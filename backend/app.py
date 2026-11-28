@@ -65,12 +65,16 @@ class Feedback(Input):
     edited_prompt: str | None = Field(default=None, min_length=1, max_length=16000)
 
 
-def create_app(store, token):
+def create_app(store, token, build_controller=None):
     if not token or len(token) < 32:
         raise ValueError('Use an authentication token of at least 32 characters.')
+    if build_controller is None:
+        from backend.builds import BuildController,BuildStore
+        build_controller=BuildController(BuildStore(store.directory,store))
     @asynccontextmanager
     async def lifespan(app):
         yield
+        build_controller.close()
         store.close()
     app = FastAPI(title='Prompt Aid local service', docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.store = store
@@ -154,6 +158,8 @@ def create_app(store, token):
     def feedback(review_id: str, body: Feedback):
         return store.feedback(review_id, body.outcome, body.edited_prompt)
 
+    from backend.build_api import register
+    register(app,build_controller)
     return app
 
 

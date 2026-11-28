@@ -104,10 +104,11 @@ class APITests(unittest.TestCase):
         from fastapi.testclient import TestClient
         from backend.app import create_app
         self.client = TestClient(create_app(self.store,'x'*40), base_url='http://127.0.0.1')
+        self.client.__enter__()
         self.headers = {'Authorization':'Bearer '+'x'*40}
 
     def tearDown(self):
-        self.client.close()
+        self.client.__exit__(None,None,None)
         WorkspaceTests.tearDown(self)
 
     def test_api_auth_size_validation_and_origin(self):

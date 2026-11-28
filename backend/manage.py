@@ -81,10 +81,14 @@ def main():
                 if a.action=='stop':
                     if state.get('pid')!=c['pid']:raise ValueError('Workspace process identity changed; no process was stopped.')
                     os.kill(c['pid'],signal.SIGTERM)
-                    deadline=time.monotonic()+5
+                    deadline=time.monotonic()+10
                     while time.monotonic()<deadline:
                         try:health(c)
-                        except OSError:break
+                        except OSError:
+                            # Listener shutdown precedes resource/worker cleanup.
+                            # Wait for process exit (or zombie state) before reuse.
+                            state=subprocess.run(['ps','-p',str(c['pid']),'-o','stat='],capture_output=True,text=True,timeout=1)
+                            if not state.stdout.strip() or state.stdout.strip().startswith('Z'):break
                         time.sleep(.05)
                     else:raise ValueError('Workspace is still shutting down; retry status before restarting.')
                     (a.data/'connection.json').unlink(missing_ok=True);result={'status':'stopped'}

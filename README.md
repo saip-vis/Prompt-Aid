@@ -2,6 +2,22 @@
 
 A local-first prototype for improving coding prompts before acting on them. The primary workflow is the Prompt Aid **Codex skill**: Codex reviews the draft with its available conversation and project context, using its existing model. No separate API key is needed for that workflow. The assistant can optionally pass its review to the MCP tool, which supplies an editable review card; if the host does not render the card, the assistant can present the same review in chat. This prototype cannot capture or replace an unsent Codex prompt.
 
+## Supervised Build mode
+
+An opt-in native Build dashboard now manages a Codex worker in a detached Git
+worktree. Approve a goal, constraints and completion checks; watch structured
+progress, stop the active worker, answer a question, and review the retained diff.
+The controller independently runs checks and sends bounded failure evidence back
+for corrections, within approved turn/time limits. It never auto-merges changes.
+
+```sh
+python3 skill/prompt-aid/review.py build
+```
+
+Requires a configured local workspace, a clean committed source project, and a
+signed-in Codex CLI. See [Build setup, controls and limitations](docs/build-mode.md).
+The existing `$prompt-aid` review/Run/Cancel workflow is unchanged.
+
 ## Workspace features
 
 The native window now supports filtered source cards with hash/excerpt freshness
