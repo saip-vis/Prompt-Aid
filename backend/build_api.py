@@ -50,6 +50,19 @@ class ResumeBuild(Input):
 def register(app,controller):
     @app.get('/builds/config')
     def config():return controller.config()
+    @app.get('/builds/suggestions')
+    def suggestions(root:str):
+        from backend.check_suggestions import suggest_checks
+        from backend.builds import git
+        root=controller.store.workspace.root(root)
+        result=suggest_checks(root)
+        repository=git(root,'rev-parse','--show-toplevel',check=False)
+        ready=repository.returncode==0 and repository.stdout.strip()==root
+        if ready:
+            ready=git(root,'rev-parse','--verify','HEAD',check=False).returncode==0 and not git(root,'status','--porcelain').stdout.strip()
+        return {'root':root,**result,'ready':ready,'readiness_message':
+            'Your project is ready. Changes will be made in a separate worktree.' if ready else
+            'Save a clean Git checkpoint before starting: commit or stash your changes. Prompt Aid will leave your original files untouched.'}
     @app.get('/builds')
     def builds():return {'builds':controller.store.list()}
     @app.post('/builds')

@@ -20,11 +20,29 @@ window. A running configured local workspace is required. If the service was
 already running before upgrading, stop/start it to load the Build routes. Only
 previously configured project roots are selectable.
 
-Enter a goal, constraints (one per line), and a completion check. Choose either a
-command, file existence, or a required literal in a file. The native form exposes
-one check; the API supports up to eight. Commands are executable/argument arrays,
-not implicitly evaluated shell strings. Quotes are supported; pipelines need an
-explicit shell. Review the limits and tick approval before **Approve & start**.
+Describe the change in **What would you like to build?**. Optional instructions
+live under **Anything to preserve or avoid?**. **How we’ll check the changes**
+suggests named test suites from the selected project. One suite is selected by
+default (Python first for mixed projects); select any additional suites you want.
+**Show command** reveals the exact command and its source. No commands, imports,
+model calls, or dependency installations happen during discovery.
+
+Detection reads bounded `package.json` scripts/lockfile metadata, Python test
+settings or a small sample of test files, and Swift package/test directories.
+It respects the configured project allowlist and does not follow symlinked
+manifests or test directories. This is a best-effort suggestion, not a guarantee
+that dependencies are available or that the suite covers your goal. Detected
+command checks have a two-minute timeout each. No recognized tests means a clear
+explanation; Build will not silently replace testing with an always-passing check.
+
+**Advanced options** contains a custom command/file check and attempt/time limits.
+Commands are executable/argument arrays, not implicitly evaluated shell strings.
+Quotes are supported; pipelines need an explicit shell. The native form can
+select multiple detected suites or one custom check; the API supports eight.
+Check the approval box and choose **Start building**. Editing the goal, checks or
+limits clears approval. A readiness message explains a missing Git checkpoint;
+**Refresh project checks** rechecks it after you save. Historical builds remain
+read-only; **New build from this goal** retains the goal and suggests fresh checks.
 
 The source repository must be clean and have a commit. Prompt Aid never silently
 stashes work. It creates a detached worktree under the private data directory;
@@ -91,6 +109,7 @@ browser-origin requests. There is no MCP tool for silently approving a build.
 | Route | Purpose |
 |---|---|
 | `GET /builds/config` | Allowed roots and worker availability |
+| `GET /builds/suggestions?root=...` | Read-only suggested checks and Git readiness for one allowed project |
 | `GET /builds` | Recent builds within configured roots |
 | `POST /builds` | Explicit approved specification and limits |
 | `GET /builds/{id}` | Current state and check outcomes |

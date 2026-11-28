@@ -124,6 +124,13 @@ class BuildAPITests(BuildFixture):
         with TestClient(create_app(self.workspace,'x'*40,controller),base_url='http://127.0.0.1') as client:
             headers={'Authorization':'Bearer '+'x'*40}
             self.assertEqual(client.get('/builds/config').status_code,401)
+            self.assertEqual(client.get('/builds/suggestions',params={'root':str(self.root)}).status_code,401)
+            self.assertEqual(client.get('/builds/suggestions',params={'root':str(self.directory)},headers=headers).status_code,400)
+            discovery=client.get('/builds/suggestions',params={'root':str(self.root)},headers=headers)
+            self.assertTrue(discovery.json()['ready'])
+            (self.root/'pending.txt').write_text('uncommitted')
+            self.assertFalse(client.get('/builds/suggestions',params={'root':str(self.root)},headers=headers).json()['ready'])
+            (self.root/'pending.txt').unlink()
             for approval in [False,1,'true']:
                 self.assertEqual(client.post('/builds',headers=headers,json={**self.spec(),'approved':approval}).status_code,422)
             self.assertEqual(client.post('/builds',headers=headers,json={**self.spec(),'root':str(self.directory)}).status_code,400)

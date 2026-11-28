@@ -5,6 +5,23 @@ struct BuildConfiguration: Decodable { let roots: [String]; let workerAvailable:
 }
 struct CompletionCheck: Codable {
     let kind: String; let label: String; let argv: [String]; let path: String?; let text: String?
+    var timeoutSeconds: Int? = nil
+    enum CodingKeys: String, CodingKey { case kind,label,argv,path,text; case timeoutSeconds = "timeout_seconds" }
+}
+struct SuggestedCheck: Decodable, Identifiable {
+    let id: String; let title: String; let description: String; let evidence: String; let check: CompletionCheck
+}
+struct CheckSuggestions: Decodable {
+    let root: String; let suggestions: [SuggestedCheck]; let notices: [String]; let ready: Bool; let readinessMessage: String
+    enum CodingKeys: String, CodingKey { case root,suggestions,notices,ready; case readinessMessage = "readiness_message" }
+}
+
+// Display an argv faithfully; custom checks can round-trip quoted/empty arguments.
+func displayCommand(_ arguments: [String]) -> String {
+    arguments.map { argument in
+        if !argument.isEmpty && argument.allSatisfy({ $0.isLetter || $0.isNumber || "-_./:=*".contains($0) }) { return argument }
+        return "'" + argument.replacingOccurrences(of: "'", with: "'\\''") + "'"
+    }.joined(separator: " ")
 }
 struct BuildSpecification: Codable {
     let root: String; let goal: String; let constraints: [String]; let checks: [CompletionCheck]
