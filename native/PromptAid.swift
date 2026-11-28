@@ -1,4 +1,5 @@
 import AppKit
+import Darwin
 import SwiftUI
 
 @MainActor
@@ -397,6 +398,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     var window: NSWindow?
     init(session: ReviewSession) { self.session = session }
     func applicationDidFinishLaunching(_ notification: Notification) {
+        installEditingMenu()
         let view = ReviewView(session: session)
         // This switch lets a local layout check start the window at its minimum size.
         let minimumPreview = ProcessInfo.processInfo.environment["PROMPT_AID_TEST_MINIMUM"] == "1"
@@ -424,6 +426,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 @main
 struct PromptAidMain {
 @MainActor static func main() {
+if CommandLine.arguments.count == 1 || CommandLine.arguments.dropFirst().elementsEqual(["--build"]) {
+    // Keep Build's UI/types out of the fast review executable entirely.
+    let executable = URL(fileURLWithPath:CommandLine.arguments[0]).deletingLastPathComponent().appendingPathComponent("PromptAidBuild").path
+    let first = strdup(executable)
+    var args: [UnsafeMutablePointer<CChar>?] = [first,nil]
+    let code = args.withUnsafeMutableBufferPointer { execv(executable,$0.baseAddress!) }
+    free(first)
+    fputs("Prompt Aid Build could not open (\(code)). Rebuild/reinstall the app.\n",stderr)
+    exit(1)
+}
+
 LaunchMetrics.started = ProcessInfo.processInfo.systemUptime
 LaunchMetrics.record("main_entered_ms")
 do {

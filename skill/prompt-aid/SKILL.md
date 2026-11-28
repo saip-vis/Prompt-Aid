@@ -102,3 +102,12 @@ review or prompt. The native app discovers private local configuration. Only the
 user's **Start / reconnect workspace** action may start a previously configured
 service during review. Saving history/feedback is explicit. Optional MCP tools
 require explicitly allowed roots and persist filtered source text locally.
+
+
+## Separate opt-in Build mode
+
+The native app also has a supervised Build dashboard, launched with
+`python3 <skill-directory>/review.py build`. This is a separate user-approved mode,
+not a replacement for prompt review. Do not launch it merely because a draft asks
+for implementation. Its UI requires explicit goal/check approval before starting
+a worker. Review Run still returns the edited request to this conversation.

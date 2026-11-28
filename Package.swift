@@ -5,7 +5,7 @@ let package = Package(
     platforms: [.macOS(.v13)],
     products: [.library(name: "PromptAidCore", targets: ["PromptAidCore"])],
     targets: [
-        .target(name: "PromptAidCore", path: "native", exclude: ["PromptAid.swift", "build.sh", "Tests"], sources: ["ServiceClient.swift", "ReviewProtocol.swift"]),
+        .target(name: "PromptAidCore", path: "native", exclude: ["PromptAid.swift", "BuildMode.swift", "BuildMain.swift", "EditingMenu.swift", "BuildComparisonView.swift", "build.sh", "Tests"], sources: ["ServiceClient.swift", "ReviewProtocol.swift", "BuildModels.swift", "BuildComparisonModels.swift"]),
         .testTarget(name: "PromptAidCoreTests", dependencies: ["PromptAidCore"], path: "native/Tests")
     ]
 )

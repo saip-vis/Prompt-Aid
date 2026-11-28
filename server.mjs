@@ -9,7 +9,7 @@ import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from '@model
 const WIDGET_URI = 'ui://prompt-aid/review.html';
 
 export function createPromptAidServer() {
-  const server = new McpServer({name:'prompt-aid', version:'0.1.0'});
+  const server = new McpServer({name:'prompt-aid', version:'0.2.0'});
   const rootSchema = z.string().min(1).max(4096).describe('Explicit configured Git project root chosen by the user.');
   for (const [name, action, schema, description] of [
     ['index_project', 'index', {root:rootSchema}, 'Refresh a configured project index; only changed files are rewritten. Stores filtered source text locally.'],
