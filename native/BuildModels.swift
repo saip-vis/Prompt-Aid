@@ -6,10 +6,15 @@ struct BuildConfiguration: Decodable { let roots: [String]; let workerAvailable:
 struct CompletionCheck: Codable {
     let kind: String; let label: String; let argv: [String]; let path: String?; let text: String?
     var timeoutSeconds: Int? = nil
-    enum CodingKeys: String, CodingKey { case kind,label,argv,path,text; case timeoutSeconds = "timeout_seconds" }
+    var rule: String? = nil; var criterionIndices: [Int]? = nil
+    enum CodingKeys: String, CodingKey { case kind,label,argv,path,text,rule; case timeoutSeconds = "timeout_seconds", criterionIndices = "criterion_indices" }
 }
 struct SuggestedCheck: Decodable, Identifiable {
     let id: String; let title: String; let description: String; let evidence: String; let check: CompletionCheck
+    var checkExplanation: String {
+        if check.kind == "creator_offer" { return "Runs \(check.path ?? "extractor") against frozen synthetic inputs; validates \(check.rule ?? "output")" }
+        return displayCommand(check.argv)
+    }
 }
 struct CheckSuggestions: Decodable {
     let root: String; let suggestions: [SuggestedCheck]; let notices: [String]; let ready: Bool; let readinessMessage: String
@@ -31,9 +36,20 @@ struct BuildSpecification: Codable {
     enum CodingKeys: String, CodingKey { case root,goal,constraints,checks,approved; case maxTurns = "max_turns", maxSeconds = "max_seconds", acceptanceCriteria = "acceptance_criteria" }
 }
 struct CheckOutcome: Decodable { let label: String; let passed: Bool; let details: String; var status: String?; var reason: String?
+    var cases: [SourceCaseEvidence]?
     var title: String { (status == "blocked" ? "Couldn’t run · " : passed ? "Passed · " : "Failed · ")+label }
 }
-struct CriterionEvidence: Decodable { let text: String; let status: String; let evidence: String }
+struct CriterionEvidence: Decodable { let text: String; let status: String; let evidence: String
+    var automatedStatus: String?;var automatedEvidence: [LinkedCheckEvidence]?
+    enum CodingKeys: String,CodingKey { case text,status,evidence;case automatedStatus = "automated_status", automatedEvidence = "automated_evidence" }
+}
+struct LinkedCheckEvidence: Decodable { let label: String;let status: String;let casesPassed: Int;let casesTotal: Int
+    var display: String {
+        let count = casesTotal>0 ? " · \(casesPassed)/\(casesTotal) assertions" : ""
+        return "Automated support: \(label) · \(status)\(count)"
+    }
+    enum CodingKeys: String,CodingKey { case label,status;case casesPassed = "cases_passed", casesTotal = "cases_total" }
+}
 struct RuntimeEvidence: Decodable { let label: String; let status: String; let reason: String; let details: String? }
 struct BuildOutcome: Decodable { let code: String; let title: String; let summary: String }
 struct EnvironmentMemory: Decodable { let updatedAt: String; let results: Results

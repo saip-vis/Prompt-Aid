@@ -123,3 +123,12 @@ Build mode separates automated regression checks from goal-specific evidence.
 Runtime preflight catches setup failures before a coding attempt; a result stays
 **Needs review** until the user confirms the approved behavior. Retained work can
 be rechecked without another model call. See [Build evidence and outcomes](docs/build-mode.md#goal-specific-evidence-and-outcomes).
+
+## Creator-offer demo and recorded evidence
+
+A separate fictional Creator Inbox target lets Prompt Aid supervise a relevant
+AI-data validation change. It measures deliberately flawed starting code against
+frozen source-backed examples, then records actual worker results, criterion-linked
+evidence, durations and reported tokens. Native comparison/replay is read-only
+and clearly labeled. See [demo setup and two-minute walkthrough](docs/creator-demo.md)
+and the [typed TypeScript API client](sdk/typescript/README.md).

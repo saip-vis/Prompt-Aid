@@ -16,6 +16,7 @@ jobs:
           python-version: '3.12'
       - run: npm ci
       - run: npm test
+      - run: npm run test:sdk
       - run: pip install -r requirements-service.txt -r requirements-vector.txt
       - run: python -m unittest discover -s test -p 'test_*.py' -v
       - run: python evaluation/evaluate.py --method bm25

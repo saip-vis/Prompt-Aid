@@ -12,7 +12,8 @@
     "test:python": "python3 -m unittest discover -s test -p \"test_*.py\" -v",
     "test:native": "swift test",
     "build:native": "./native/build.sh",
-    "build:workspace": "python3 skill/prompt-aid/review.py build"
+    "build:workspace": "python3 skill/prompt-aid/review.py build",
+    "test:sdk": "tsc -p sdk/typescript/tsconfig.json && node --test sdk/typescript/client.test.mjs"
   },
   "engines": {
     "node": ">=20"
@@ -21,5 +22,8 @@
     "@modelcontextprotocol/ext-apps": "^2.0.4",
     "@modelcontextprotocol/sdk": "^1.32.2",
     "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
   }
 }

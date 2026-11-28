@@ -7,12 +7,14 @@ class Input(BaseModel):
 Text=Annotated[str,Field(min_length=1,max_length=1000)]
 Argument=Annotated[str,Field(max_length=1000)]
 class Check(Input):
-    kind:Literal['command','file_exists','file_contains']
+    kind:Literal['command','file_exists','file_contains','creator_offer']
     label:str=Field(min_length=1,max_length=100)
     argv:list[Argument]=Field(default_factory=list,max_length=24)
     path:str|None=Field(default=None,min_length=1,max_length=1024)
     text:str|None=Field(default=None,min_length=1,max_length=2000)
     timeout_seconds:int=Field(default=30,ge=1,le=120)
+    rule:Literal['budget','currency','deadline','source_evidence']|None=None
+    criterion_indices:list[Annotated[int,Field(ge=0,le=11)]]=Field(default_factory=list,max_length=12)
     @model_validator(mode='after')
     def valid_check(self):
         if self.kind=='command':
@@ -24,6 +26,8 @@ class Check(Input):
             if PurePath(self.path).is_absolute() or '..' in PurePath(self.path).parts:raise ValueError('File check path must stay inside the worktree.')
             if self.kind=='file_contains' and self.text is None:raise ValueError('Provide the required literal text.')
             if self.kind=='file_exists' and self.text is not None:raise ValueError('File existence check does not take text.')
+            if self.kind=='creator_offer' and (self.rule is None or self.text is not None or not self.path.endswith('.py')):raise ValueError('Protected creator checks need a Python extractor path and a supported rule.')
+        if self.kind!='creator_offer' and self.rule is not None:raise ValueError('Rules are only supported by protected creator checks.')
         return self
 class StartBuild(Input):
     root:str=Field(min_length=1,max_length=4096)
@@ -37,6 +41,8 @@ class StartBuild(Input):
     @model_validator(mode='after')
     def approval(self):
         if self.approved is not True or not self.goal.strip():raise ValueError('Approve a nonempty goal before starting.')
+        count=len(self.acceptance_criteria) or 1
+        if any(index>=count for check in self.checks for index in check.criterion_indices):raise ValueError('Link checks to existing approved success criteria.')
         return self
 
 class ResumeBuild(Input):
@@ -67,6 +73,11 @@ class ConfirmCriterion(Input):
 def register(app,controller):
     @app.get('/builds/config')
     def config():return controller.config()
+    @app.get('/builds/demo')
+    def demo():
+        from backend.creator_checks import demo_root,demo_spec
+        root=demo_root(controller.store.workspace.roots)
+        return {'spec':demo_spec(root) if root else None,'synthetic':True,'description':'Fictional creator inbox with deliberately flawed starting code. No messages are sent.'}
     @app.get('/builds/suggestions')
     def suggestions(root:str):
         from backend.check_suggestions import suggest_checks
@@ -94,6 +105,10 @@ def register(app,controller):
     def confirm(id:str,index:int,body:ConfirmCriterion):return controller.attest(id,index,body.evidence)
     @app.get('/builds/{id}/events')
     def events(id:str,after:int=0):return {'events':controller.store.events(id,max(0,after))}
+    @app.get('/builds/{id}/comparison')
+    def comparison(id:str,baseline_id:str|None=None):
+        from backend.build_comparison import compare
+        return compare(controller.store.get(id),controller.store.get(baseline_id) if baseline_id else None)
     @app.get('/builds/{id}/diff')
     def diff(id:str):return {'diff':controller.diff(id)}
     @app.post('/builds/{id}/stop')

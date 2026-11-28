@@ -43,6 +43,15 @@ def suggest_checks(root):
                         break
         return samples
 
+    try:
+        if json.loads(read('.promptaid-demo.json') or '{}').get('demo')=='creator-inbox-v1':
+            from backend.creator_checks import checks
+            return {'suggestions':[{'id':'creator-'+check['rule'],'title':check['label'],
+                    'description':'Check the extractor against frozen fictional emails.',
+                    'evidence':'Protected creator-offers-v1 evaluation pack','check':check} for check in checks()],
+                    'notices':['Synthetic demo: starting code is deliberately flawed. Checks do not send messages.']}
+    except (ValueError,AttributeError):pass
+
     def suggestion(id, title, description, evidence, argv):
         return {'id': id, 'title': title, 'description': description, 'evidence': evidence,
                 'check': {'kind': 'command', 'label': title, 'argv': argv,

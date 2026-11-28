@@ -1,0 +1,1332 @@
+{
+  "kind": "recorded_real_codex_run",
+  "dataset": "12 fictional creator-offer messages; 48 source assertions",
+  "model": null,
+  "controlled_model_comparison": false,
+  "verification_pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+  "baseline": {
+    "label": "Seeded starting code \u00b7 no model call",
+    "turn": 0,
+    "kind": "baseline",
+    "elapsed_ms": 288.4,
+    "worker_ms": 0,
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0
+    },
+    "checks_passed": 0,
+    "checks_total": 4,
+    "cases_passed": 32,
+    "cases_total": 48,
+    "checks": [
+      {
+        "passed": false,
+        "status": "failed",
+        "reason": "Protected synthetic source-backed examples.",
+        "details": "{\"rule\": \"budget\", \"passed\": 9, \"total\": 12, \"failures\": [{\"case_id\": \"missing-budget\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"budget\": null}, \"actual\": {\"budget\": 2500}, \"source\": \"Moss Studio requests 1 TikTok video. Deadline: 2026-12-15. Please share your rate.\"}, {\"case_id\": \"no-money\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"budget\": null}, \"actual\": {\"budget\": 2500}, \"source\": \"Echo Craft requests 4 Instagram stories. Timing and compensation are open.\"}, {\"case_id\": \"conflicting-budget\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"budget\": null}, \"actual\": {\"budget\": 500}, \"source\": \"Fern Cosmetics offers USD 500 for 1 TikTok video. Another budget is USD 700. Deadline: 2026-12-16.\"}]}",
+        "pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+        "label": "Budget accuracy",
+        "duration_ms": 165.3,
+        "cases": [
+          {
+            "case_id": "clear-usd",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 1200
+            },
+            "actual": {
+              "budget": 1200
+            }
+          },
+          {
+            "case_id": "missing-budget",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "budget": null
+            },
+            "actual": {
+              "budget": 2500
+            }
+          },
+          {
+            "case_id": "clear-eur",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 900
+            },
+            "actual": {
+              "budget": 900
+            }
+          },
+          {
+            "case_id": "ambiguous-dollar",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 800
+            },
+            "actual": {
+              "budget": 800
+            }
+          },
+          {
+            "case_id": "conflicting-dates",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 750
+            },
+            "actual": {
+              "budget": 750
+            }
+          },
+          {
+            "case_id": "missing-deadline",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 600
+            },
+            "actual": {
+              "budget": 600
+            }
+          },
+          {
+            "case_id": "no-deliverable",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 1500
+            },
+            "actual": {
+              "budget": 1500
+            }
+          },
+          {
+            "case_id": "injection",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 450
+            },
+            "actual": {
+              "budget": 450
+            }
+          },
+          {
+            "case_id": "thousands",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 2400
+            },
+            "actual": {
+              "budget": 2400
+            }
+          },
+          {
+            "case_id": "no-money",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "budget": null
+            },
+            "actual": {
+              "budget": 2500
+            }
+          },
+          {
+            "case_id": "clear-cad",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 1100
+            },
+            "actual": {
+              "budget": 1100
+            }
+          },
+          {
+            "case_id": "conflicting-budget",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "budget": null
+            },
+            "actual": {
+              "budget": 500
+            }
+          }
+        ]
+      },
+      {
+        "passed": false,
+        "status": "failed",
+        "reason": "Protected synthetic source-backed examples.",
+        "details": "{\"rule\": \"currency\", \"passed\": 9, \"total\": 12, \"failures\": [{\"case_id\": \"missing-budget\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"currency\": null}, \"actual\": {\"currency\": \"USD\"}, \"source\": \"Moss Studio requests 1 TikTok video. Deadline: 2026-12-15. Please share your rate.\"}, {\"case_id\": \"ambiguous-dollar\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"currency\": null}, \"actual\": {\"currency\": \"USD\"}, \"source\": \"Pine Collective offers $800 for 1 YouTube short. Deadline: 2026-12-20.\"}, {\"case_id\": \"no-money\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"currency\": null}, \"actual\": {\"currency\": \"USD\"}, \"source\": \"Echo Craft requests 4 Instagram stories. Timing and compensation are open.\"}]}",
+        "pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+        "label": "Currency and ambiguity",
+        "duration_ms": 0.7,
+        "cases": [
+          {
+            "case_id": "clear-usd",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "missing-budget",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "currency": null
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "clear-eur",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "EUR"
+            },
+            "actual": {
+              "currency": "EUR"
+            }
+          },
+          {
+            "case_id": "ambiguous-dollar",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "currency": null
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "conflicting-dates",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "missing-deadline",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "GBP"
+            },
+            "actual": {
+              "currency": "GBP"
+            }
+          },
+          {
+            "case_id": "no-deliverable",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "injection",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "EUR"
+            },
+            "actual": {
+              "currency": "EUR"
+            }
+          },
+          {
+            "case_id": "thousands",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "no-money",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "currency": null
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "clear-cad",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "CAD"
+            },
+            "actual": {
+              "currency": "CAD"
+            }
+          },
+          {
+            "case_id": "conflicting-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          }
+        ]
+      },
+      {
+        "passed": false,
+        "status": "failed",
+        "reason": "Protected synthetic source-backed examples.",
+        "details": "{\"rule\": \"deadline\", \"passed\": 9, \"total\": 12, \"failures\": [{\"case_id\": \"conflicting-dates\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"deadline\": null}, \"actual\": {\"deadline\": \"2026-12-10\"}, \"source\": \"Amber Beauty offers USD 750 for 2 TikTok videos. Deadline: 2026-12-10. The updated deadline is 2026-12-14.\"}, {\"case_id\": \"missing-deadline\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"deadline\": null}, \"actual\": {\"deadline\": \"2026-12-31\"}, \"source\": \"Orbit Goods offers GBP 600 for 1 Instagram reel. We can discuss timing later.\"}, {\"case_id\": \"no-money\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"deadline\": null}, \"actual\": {\"deadline\": \"2026-12-31\"}, \"source\": \"Echo Craft requests 4 Instagram stories. Timing and compensation are open.\"}]}",
+        "pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+        "label": "Deadline conflicts",
+        "duration_ms": 0.7,
+        "cases": [
+          {
+            "case_id": "clear-usd",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-12"
+            },
+            "actual": {
+              "deadline": "2026-12-12"
+            }
+          },
+          {
+            "case_id": "missing-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-15"
+            },
+            "actual": {
+              "deadline": "2026-12-15"
+            }
+          },
+          {
+            "case_id": "clear-eur",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-18"
+            },
+            "actual": {
+              "deadline": "2026-12-18"
+            }
+          },
+          {
+            "case_id": "ambiguous-dollar",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-20"
+            },
+            "actual": {
+              "deadline": "2026-12-20"
+            }
+          },
+          {
+            "case_id": "conflicting-dates",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deadline": null
+            },
+            "actual": {
+              "deadline": "2026-12-10"
+            }
+          },
+          {
+            "case_id": "missing-deadline",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deadline": null
+            },
+            "actual": {
+              "deadline": "2026-12-31"
+            }
+          },
+          {
+            "case_id": "no-deliverable",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-22"
+            },
+            "actual": {
+              "deadline": "2026-12-22"
+            }
+          },
+          {
+            "case_id": "injection",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-19"
+            },
+            "actual": {
+              "deadline": "2026-12-19"
+            }
+          },
+          {
+            "case_id": "thousands",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-21"
+            },
+            "actual": {
+              "deadline": "2026-12-21"
+            }
+          },
+          {
+            "case_id": "no-money",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deadline": null
+            },
+            "actual": {
+              "deadline": "2026-12-31"
+            }
+          },
+          {
+            "case_id": "clear-cad",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-23"
+            },
+            "actual": {
+              "deadline": "2026-12-23"
+            }
+          },
+          {
+            "case_id": "conflicting-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-16"
+            },
+            "actual": {
+              "deadline": "2026-12-16"
+            }
+          }
+        ]
+      },
+      {
+        "passed": false,
+        "status": "failed",
+        "reason": "Protected synthetic source-backed examples.",
+        "details": "{\"rule\": \"source_evidence\", \"passed\": 5, \"total\": 12, \"failures\": [{\"case_id\": \"missing-budget\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"deliverables\": [\"1 TikTok video\"], \"needs_review\": false}, \"actual\": {\"deliverables\": [\"1 TikTok video\"], \"needs_review\": false}, \"source\": \"Moss Studio requests 1 TikTok video. Deadline: 2026-12-15. Please share your rate.\"}, {\"case_id\": \"ambiguous-dollar\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"deliverables\": [\"1 YouTube short\"], \"needs_review\": true}, \"actual\": {\"deliverables\": [\"1 YouTube short\"], \"needs_review\": false}, \"source\": \"Pine Collective offers $800 for 1 YouTube short. Deadline: 2026-12-20.\"}, {\"case_id\": \"conflicting-dates\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"deliverables\": [\"2 TikTok videos\"], \"needs_review\": true}, \"actual\": {\"deliverables\": [\"2 TikTok videos\"], \"needs_review\": false}, \"source\": \"Amber Beauty offers USD 750 for 2 TikTok videos. Deadline: 2026-12-10. The updated deadline is 2026-12-14.\"}, {\"case_id\": \"missing-deadline\", \"passed\": false, \"reason\": \"Does not match the protected expectation or source evidence.\", \"expected\": {\"deliverables\": [\"1 Instagram reel\"], \"needs_review\": false}, \"actual\": {\"deliverables\": [\"1 Instagram reel\"], \"needs_review\": false}, \"source\": \"Orbit Goods offers GBP 600 for 1 Instagram reel. We can discuss timing later.\"}]}",
+        "pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+        "label": "Source evidence and deliverables",
+        "duration_ms": 0.9,
+        "cases": [
+          {
+            "case_id": "clear-usd",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "2 Instagram reels"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "2 Instagram reels"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "missing-budget",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "clear-eur",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "3 Instagram stories"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "3 Instagram stories"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "ambiguous-dollar",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deliverables": [
+                "1 YouTube short"
+              ],
+              "needs_review": true
+            },
+            "actual": {
+              "deliverables": [
+                "1 YouTube short"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "conflicting-dates",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deliverables": [
+                "2 TikTok videos"
+              ],
+              "needs_review": true
+            },
+            "actual": {
+              "deliverables": [
+                "2 TikTok videos"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "missing-deadline",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deliverables": [
+                "1 Instagram reel"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "1 Instagram reel"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "no-deliverable",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "injection",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": true
+            },
+            "actual": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "thousands",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "2 YouTube shorts"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "2 YouTube shorts"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "no-money",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deliverables": [
+                "4 Instagram stories"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "4 Instagram stories"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "clear-cad",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "1 Instagram reel",
+                "2 Instagram stories"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "1 Instagram reel",
+                "2 Instagram stories"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "conflicting-budget",
+            "passed": false,
+            "reason": "Does not match the protected expectation or source evidence.",
+            "expected": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": true
+            },
+            "actual": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": false
+            }
+          }
+        ]
+      }
+    ],
+    "output": "[{\"id\": \"clear-usd\", \"budget\": 1200, \"currency\": \"USD\", \"deadline\": \"2026-12-12\", \"deliverables\": [\"2 Instagram reels\"], \"needs_review\": false, \"evidence\": {\"budget\": \"USD 1200\", \"currency\": \"USD 1200\", \"deadline\": \"2026-12-12\", \"deliverables\": [\"2 Instagram reels\"]}}, {\"id\": \"missing-budget\", \"budget\": 2500, \"currency\": \"USD\", \"deadline\": \"2026-12-15\", \"deliverables\": [\"1 TikTok video\"], \"needs_review\": false, \"evidence\": {\"budget\": null, \"currency\": null, \"deadline\": \"2026-12-15\", \"deliverables\": [\"1 TikTok video\"]}}, {\"id\": \"clear-eur\", \"budget\": 900, \"currency\": \"EUR\", \"deadline\": \"2026-12-18\", \"deliverables\": [\"3 Instagram stories\"], \"needs_review\": false, \"evidence\": {\"budget\": \"EUR 900\", \"currency\": \"EUR 900\", \"deadline\": \"2026-12-18\", \"deliverables\": [\"3 Instagram stories\"]}}]"
+  },
+  "result": {
+    "label": "Worker attempt 1",
+    "turn": 1,
+    "kind": "worker_result",
+    "elapsed_ms": 83261.0,
+    "worker_ms": 82949.5,
+    "usage": {
+      "input_tokens": 147327,
+      "output_tokens": 3701,
+      "cached_input_tokens": 119680
+    },
+    "checks_passed": 4,
+    "checks_total": 4,
+    "cases_passed": 48,
+    "cases_total": 48,
+    "checks": [
+      {
+        "passed": true,
+        "status": "passed",
+        "reason": "Protected synthetic source-backed examples.",
+        "details": "{\"rule\": \"budget\", \"passed\": 12, \"total\": 12, \"failures\": []}",
+        "pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+        "label": "Budget accuracy",
+        "duration_ms": 191.4,
+        "cases": [
+          {
+            "case_id": "clear-usd",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 1200
+            },
+            "actual": {
+              "budget": 1200
+            }
+          },
+          {
+            "case_id": "missing-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": null
+            },
+            "actual": {
+              "budget": null
+            }
+          },
+          {
+            "case_id": "clear-eur",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 900
+            },
+            "actual": {
+              "budget": 900
+            }
+          },
+          {
+            "case_id": "ambiguous-dollar",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 800
+            },
+            "actual": {
+              "budget": 800
+            }
+          },
+          {
+            "case_id": "conflicting-dates",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 750
+            },
+            "actual": {
+              "budget": 750
+            }
+          },
+          {
+            "case_id": "missing-deadline",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 600
+            },
+            "actual": {
+              "budget": 600
+            }
+          },
+          {
+            "case_id": "no-deliverable",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 1500
+            },
+            "actual": {
+              "budget": 1500
+            }
+          },
+          {
+            "case_id": "injection",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 450
+            },
+            "actual": {
+              "budget": 450
+            }
+          },
+          {
+            "case_id": "thousands",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 2400
+            },
+            "actual": {
+              "budget": 2400
+            }
+          },
+          {
+            "case_id": "no-money",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": null
+            },
+            "actual": {
+              "budget": null
+            }
+          },
+          {
+            "case_id": "clear-cad",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": 1100
+            },
+            "actual": {
+              "budget": 1100
+            }
+          },
+          {
+            "case_id": "conflicting-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "budget": null
+            },
+            "actual": {
+              "budget": null
+            }
+          }
+        ]
+      },
+      {
+        "passed": true,
+        "status": "passed",
+        "reason": "Protected synthetic source-backed examples.",
+        "details": "{\"rule\": \"currency\", \"passed\": 12, \"total\": 12, \"failures\": []}",
+        "pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+        "label": "Currency and ambiguity",
+        "duration_ms": 1.1,
+        "cases": [
+          {
+            "case_id": "clear-usd",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "missing-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": null
+            },
+            "actual": {
+              "currency": null
+            }
+          },
+          {
+            "case_id": "clear-eur",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "EUR"
+            },
+            "actual": {
+              "currency": "EUR"
+            }
+          },
+          {
+            "case_id": "ambiguous-dollar",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": null
+            },
+            "actual": {
+              "currency": null
+            }
+          },
+          {
+            "case_id": "conflicting-dates",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "missing-deadline",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "GBP"
+            },
+            "actual": {
+              "currency": "GBP"
+            }
+          },
+          {
+            "case_id": "no-deliverable",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "injection",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "EUR"
+            },
+            "actual": {
+              "currency": "EUR"
+            }
+          },
+          {
+            "case_id": "thousands",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          },
+          {
+            "case_id": "no-money",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": null
+            },
+            "actual": {
+              "currency": null
+            }
+          },
+          {
+            "case_id": "clear-cad",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "CAD"
+            },
+            "actual": {
+              "currency": "CAD"
+            }
+          },
+          {
+            "case_id": "conflicting-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "currency": "USD"
+            },
+            "actual": {
+              "currency": "USD"
+            }
+          }
+        ]
+      },
+      {
+        "passed": true,
+        "status": "passed",
+        "reason": "Protected synthetic source-backed examples.",
+        "details": "{\"rule\": \"deadline\", \"passed\": 12, \"total\": 12, \"failures\": []}",
+        "pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+        "label": "Deadline conflicts",
+        "duration_ms": 1.1,
+        "cases": [
+          {
+            "case_id": "clear-usd",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-12"
+            },
+            "actual": {
+              "deadline": "2026-12-12"
+            }
+          },
+          {
+            "case_id": "missing-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-15"
+            },
+            "actual": {
+              "deadline": "2026-12-15"
+            }
+          },
+          {
+            "case_id": "clear-eur",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-18"
+            },
+            "actual": {
+              "deadline": "2026-12-18"
+            }
+          },
+          {
+            "case_id": "ambiguous-dollar",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-20"
+            },
+            "actual": {
+              "deadline": "2026-12-20"
+            }
+          },
+          {
+            "case_id": "conflicting-dates",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": null
+            },
+            "actual": {
+              "deadline": null
+            }
+          },
+          {
+            "case_id": "missing-deadline",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": null
+            },
+            "actual": {
+              "deadline": null
+            }
+          },
+          {
+            "case_id": "no-deliverable",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-22"
+            },
+            "actual": {
+              "deadline": "2026-12-22"
+            }
+          },
+          {
+            "case_id": "injection",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-19"
+            },
+            "actual": {
+              "deadline": "2026-12-19"
+            }
+          },
+          {
+            "case_id": "thousands",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-21"
+            },
+            "actual": {
+              "deadline": "2026-12-21"
+            }
+          },
+          {
+            "case_id": "no-money",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": null
+            },
+            "actual": {
+              "deadline": null
+            }
+          },
+          {
+            "case_id": "clear-cad",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-23"
+            },
+            "actual": {
+              "deadline": "2026-12-23"
+            }
+          },
+          {
+            "case_id": "conflicting-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deadline": "2026-12-16"
+            },
+            "actual": {
+              "deadline": "2026-12-16"
+            }
+          }
+        ]
+      },
+      {
+        "passed": true,
+        "status": "passed",
+        "reason": "Protected synthetic source-backed examples.",
+        "details": "{\"rule\": \"source_evidence\", \"passed\": 12, \"total\": 12, \"failures\": []}",
+        "pack_sha256": "a5ba29d7fc2c0a4e0b72575c628fb1fa540b641e03c4e9e8b12b675f1fd92041",
+        "label": "Source evidence and deliverables",
+        "duration_ms": 1.0,
+        "cases": [
+          {
+            "case_id": "clear-usd",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "2 Instagram reels"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "2 Instagram reels"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "missing-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "clear-eur",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "3 Instagram stories"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "3 Instagram stories"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "ambiguous-dollar",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "1 YouTube short"
+              ],
+              "needs_review": true
+            },
+            "actual": {
+              "deliverables": [
+                "1 YouTube short"
+              ],
+              "needs_review": true
+            }
+          },
+          {
+            "case_id": "conflicting-dates",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "2 TikTok videos"
+              ],
+              "needs_review": true
+            },
+            "actual": {
+              "deliverables": [
+                "2 TikTok videos"
+              ],
+              "needs_review": true
+            }
+          },
+          {
+            "case_id": "missing-deadline",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "1 Instagram reel"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "1 Instagram reel"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "no-deliverable",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "injection",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": true
+            },
+            "actual": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": true
+            }
+          },
+          {
+            "case_id": "thousands",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "2 YouTube shorts"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "2 YouTube shorts"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "no-money",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "4 Instagram stories"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "4 Instagram stories"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "clear-cad",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "1 Instagram reel",
+                "2 Instagram stories"
+              ],
+              "needs_review": false
+            },
+            "actual": {
+              "deliverables": [
+                "1 Instagram reel",
+                "2 Instagram stories"
+              ],
+              "needs_review": false
+            }
+          },
+          {
+            "case_id": "conflicting-budget",
+            "passed": true,
+            "reason": "Matches protected source-backed expectation.",
+            "expected": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": true
+            },
+            "actual": {
+              "deliverables": [
+                "1 TikTok video"
+              ],
+              "needs_review": true
+            }
+          }
+        ]
+      }
+    ],
+    "output": "[{\"id\": \"clear-usd\", \"budget\": 1200, \"currency\": \"USD\", \"deadline\": \"2026-12-12\", \"deliverables\": [\"2 Instagram reels\"], \"needs_review\": false, \"evidence\": {\"budget\": \"USD 1200\", \"currency\": \"USD 1200\", \"deadline\": \"2026-12-12\", \"deliverables\": [\"2 Instagram reels\"]}}, {\"id\": \"missing-budget\", \"budget\": null, \"currency\": null, \"deadline\": \"2026-12-15\", \"deliverables\": [\"1 TikTok video\"], \"needs_review\": false, \"evidence\": {\"budget\": null, \"currency\": null, \"deadline\": \"2026-12-15\", \"deliverables\": [\"1 TikTok video\"]}}, {\"id\": \"clear-eur\", \"budget\": 900, \"currency\": \"EUR\", \"deadline\": \"2026-12-18\", \"deliverables\": [\"3 Instagram stories\"], \"needs_review\": false, \"evidence\": {\"budget\": \"EUR 900\", \"currency\": \"EUR 900\", \"deadline\": \"2026-12-18\", \"deliverables\": [\"3 Instagram stories\"]}}]"
+  },
+  "limitations": [
+    "Starting code versus recorded worktree results on the same frozen examples. This does not compare Prompt Aid against an unaided LLM.",
+    "Synthetic fixture results describe these cases only. Replay shows saved evidence and does not run a model. Token counts are not a dollar-cost estimate."
+  ]
+}

@@ -26,4 +26,14 @@ final class BuildModelsTests: XCTestCase {
         XCTAssertEqual(record.payload.criteria?[0].status,"pending")
         XCTAssertNil(record.spec.acceptanceCriteria)
     }
+    func testProtectedLinksAndRecordedSourceEvidenceDecodeWithoutInventedValues() throws {
+        let checkJSON = #"{"kind":"creator_offer","label":"Budget","argv":[],"path":"extract_offers.py","rule":"budget","criterion_indices":[0]}"#
+        let check = try JSONDecoder().decode(CompletionCheck.self,from:Data(checkJSON.utf8))
+        XCTAssertEqual(check.rule,"budget");XCTAssertEqual(check.criterionIndices,[0])
+        let json = #"{"case_id":"missing-budget","passed":false,"reason":"Unsupported amount","expected":{"budget":null},"actual":{"budget":2500},"source":"Please share your rate."}"#
+        let evidence = try JSONDecoder().decode(SourceCaseEvidence.self,from:Data(json.utf8))
+        XCTAssertEqual(evidence.expected?.display,"budget: unknown")
+        XCTAssertEqual(evidence.actual?.display,"budget: 2500")
+        XCTAssertFalse(evidence.passed)
+    }
 }
