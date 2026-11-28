@@ -18,4 +18,12 @@ final class BuildModelsTests: XCTestCase {
         let object = try XCTUnwrap(JSONSerialization.jsonObject(with:encoded) as? [String:Any])
         XCTAssertEqual(object["timeout_seconds"] as? Int,120)
     }
+    func testOutcomeEvidenceSupportsLegacyHistoryAndExplicitManualCriteria() throws {
+        let payload = #"{"id":"job","state":"needs_review","spec":{"root":"/project","goal":"Copy text","constraints":[],"checks":[],"max_turns":1,"max_seconds":180,"approved":true},"payload":{"turn":1,"message":"Review behavior","worktree":"/worktree","checks":[{"label":"Python","passed":false,"status":"blocked","reason":"Runtime missing","details":"Python blocked"}],"criteria":[{"text":"Copies exact saved text","status":"pending","evidence":"Not observed"}]},"outcome":{"code":"blocked_setup","title":"Blocked by setup","summary":"Checks could not run"}}"#
+        let record = try JSONDecoder().decode(BuildRecord.self,from:Data(payload.utf8))
+        XCTAssertEqual(record.outcome?.code,"blocked_setup")
+        XCTAssertEqual(record.payload.checks[0].title,"Couldn’t run · Python")
+        XCTAssertEqual(record.payload.criteria?[0].status,"pending")
+        XCTAssertNil(record.spec.acceptanceCriteria)
+    }
 }

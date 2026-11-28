@@ -13,7 +13,8 @@ struct SuggestedCheck: Decodable, Identifiable {
 }
 struct CheckSuggestions: Decodable {
     let root: String; let suggestions: [SuggestedCheck]; let notices: [String]; let ready: Bool; let readinessMessage: String
-    enum CodingKeys: String, CodingKey { case root,suggestions,notices,ready; case readinessMessage = "readiness_message" }
+    var environmentMemory: EnvironmentMemory?
+    enum CodingKeys: String, CodingKey { case root,suggestions,notices,ready; case readinessMessage = "readiness_message", environmentMemory = "environment_memory" }
 }
 
 // Display an argv faithfully; custom checks can round-trip quoted/empty arguments.
@@ -26,13 +27,25 @@ func displayCommand(_ arguments: [String]) -> String {
 struct BuildSpecification: Codable {
     let root: String; let goal: String; let constraints: [String]; let checks: [CompletionCheck]
     let maxTurns: Int; let maxSeconds: Int; let approved: Bool
-    enum CodingKeys: String, CodingKey { case root,goal,constraints,checks,approved; case maxTurns = "max_turns", maxSeconds = "max_seconds" }
+    var acceptanceCriteria: [String]? = nil
+    enum CodingKeys: String, CodingKey { case root,goal,constraints,checks,approved; case maxTurns = "max_turns", maxSeconds = "max_seconds", acceptanceCriteria = "acceptance_criteria" }
 }
-struct CheckOutcome: Decodable { let label: String; let passed: Bool; let details: String }
+struct CheckOutcome: Decodable { let label: String; let passed: Bool; let details: String; var status: String?; var reason: String?
+    var title: String { (status == "blocked" ? "Couldn’t run · " : passed ? "Passed · " : "Failed · ")+label }
+}
+struct CriterionEvidence: Decodable { let text: String; let status: String; let evidence: String }
+struct RuntimeEvidence: Decodable { let label: String; let status: String; let reason: String; let details: String? }
+struct BuildOutcome: Decodable { let code: String; let title: String; let summary: String }
+struct EnvironmentMemory: Decodable { let updatedAt: String; let results: Results
+    struct Results: Decodable { let preflight: [RuntimeEvidence]?; let checks: [RuntimeEvidence]? }
+    enum CodingKeys: String,CodingKey { case results;case updatedAt = "updated_at" }
+}
 struct BuildPayload: Decodable {
     let turn: Int; let message: String; let worktree: String?; let checks: [CheckOutcome]
+    var preflight: [RuntimeEvidence]?; var criteria: [CriterionEvidence]?; var workerSummary: String?; var checkStamp: String?
+    enum CodingKeys: String,CodingKey { case turn,message,worktree,checks,preflight,criteria;case workerSummary = "worker_summary", checkStamp = "check_stamp" }
 }
-struct BuildRecord: Decodable, Identifiable { let id: String; let state: String; let spec: BuildSpecification; let payload: BuildPayload }
+struct BuildRecord: Decodable, Identifiable { let id: String; let state: String; let spec: BuildSpecification; let payload: BuildPayload; var outcome: BuildOutcome? }
 struct BuildList: Decodable { let builds: [BuildRecord] }
 struct BuildEvent: Decodable, Identifiable {
     let seq: Int; let kind: String; let payload: EventPayload

@@ -4,6 +4,8 @@ import SwiftUI
 @MainActor final class BuildSession: ObservableObject {
     @Published var roots: [String] = []; @Published var root = ""
     @Published var goal = ""; @Published var constraints = ""
+    @Published var successCriteria = ""; @Published var showCriteria = false
+    @Published var verificationNotes: [Int:String] = [:]; @Published var projectMemory = ""
     @Published var checkKind = "command"; @Published var command = ""; @Published var filePath = ""; @Published var requiredText = ""
     @Published var answer = ""
     @Published var maxTurns = 3; @Published var minutes = 10; @Published var approved = false
@@ -16,7 +18,7 @@ import SwiftUI
     @Published var advanced = false; @Published var showConstraints = false
     private var client: ServiceClient?; private var poll: Task<Void,Never>?
     private var suggestionRequest = UUID()
-    var active: Bool { guard let job else { return false }; return ["queued","preparing","working","checking","correcting","stopping"].contains(job.state) }
+    var active: Bool { guard let job else { return false }; return ["queued","preparing","preflight","working","checking","correcting","stopping"].contains(job.state) }
     var hasChecks: Bool { useSuggestedChecks ? suggestions.contains { selectedChecks.contains($0.id) } : (checkKind == "command" ? !command.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty : !filePath.isEmpty && (checkKind != "file_contains" || !requiredText.isEmpty)) }
     var canStart: Bool { approved && !busy && job == nil && !loadingChecks && projectReady && hasChecks && workerAvailable && !root.isEmpty && !goal.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty }
     func connect() async {
@@ -36,7 +38,7 @@ import SwiftUI
     }
     func newBuild() {
         guard !active,!busy else { return }
-        poll?.cancel();job = nil;events = [];diff = "";answer = ""
+        poll?.cancel();job = nil;events = [];diff = "";answer = "";verificationNotes = [:]
         useSuggestedChecks = true;approved = false;advanced = false
         status = "Update the goal and choose checks for a new build."
         Task { await findChecks() }
@@ -45,7 +47,7 @@ import SwiftUI
         guard let client,!root.isEmpty else { return }
         let project = root; let request = UUID(); suggestionRequest = request
         approved = false; loadingChecks = true; projectReady = false
-        suggestions = []; selectedChecks = []; checkNotice = ""; readinessMessage = "Checking your project…"
+        suggestions = []; selectedChecks = []; checkNotice = "";projectMemory = ""; readinessMessage = "Checking your project…"
         do {
             var query = URLComponents(); query.queryItems = [URLQueryItem(name:"root",value:project)]
             let result: CheckSuggestions = try await client.request("/builds/suggestions?"+(query.percentEncodedQuery ?? ""))
@@ -55,6 +57,10 @@ import SwiftUI
             let preferred = result.suggestions.first { $0.id == "python-tests" } ?? result.suggestions.first
             selectedChecks = Set(preferred.map { [$0.id] } ?? [])
             checkNotice = result.notices.joined(separator:"\n");projectReady = result.ready;readinessMessage = result.readinessMessage
+            if let memory = result.environmentMemory {
+                let checks = memory.results.preflight?.contains(where:{ $0.status == "blocked" }) == true ? memory.results.preflight ?? [] : memory.results.checks ?? memory.results.preflight ?? []
+                projectMemory = checks.map { $0.label+": "+($0.status == "blocked" ? "couldn’t run last time" : $0.status == "passed" || $0.status == "ready" ? "worked last time" : "needs attention") }.joined(separator:"\n")
+            }
             if suggestions.isEmpty { advanced = true }
         } catch {
             guard root == project,suggestionRequest == request else { return }
@@ -75,7 +81,7 @@ import SwiftUI
                     let argv = checkKind == "command" ? try commandArguments(command) : []
                     checks = [CompletionCheck(kind:checkKind,label:checkKind == "command" ? "Custom check" : "Required file",argv:argv,path:checkKind == "command" ? nil : filePath,text:checkKind == "file_contains" ? requiredText : nil)]
                 }
-                let spec = BuildSpecification(root:root,goal:goal,constraints:constraints.split(separator:"\n").map(String.init),checks:checks,maxTurns:maxTurns,maxSeconds:minutes*60,approved:true)
+                let spec = BuildSpecification(root:root,goal:goal,constraints:constraints.split(separator:"\n").map(String.init),checks:checks,maxTurns:maxTurns,maxSeconds:minutes*60,approved:true,acceptanceCriteria:successCriteria.split(separator:"\n").map(String.init))
                 let object = try JSONSerialization.jsonObject(with:JSONEncoder().encode(spec)) as! [String:Any]
                 let created: BuildRecord = try await client.request("/builds",method:"POST",body:object)
                 select(created); approved = false
@@ -84,7 +90,8 @@ import SwiftUI
     }
     func select(_ record: BuildRecord) {
         poll?.cancel();root = record.spec.root;goal = record.spec.goal;constraints = record.spec.constraints.joined(separator:"\n")
-        maxTurns = record.spec.maxTurns;minutes = max(1,record.spec.maxSeconds/60);approved = false
+        maxTurns = record.spec.maxTurns;minutes = max(1,record.spec.maxSeconds/60);approved = false;successCriteria = (record.spec.acceptanceCriteria ?? []).joined(separator:"\n");verificationNotes = [:]
+        showCriteria = !successCriteria.isEmpty
         if let check = record.spec.checks.first { checkKind = check.kind;command = displayCommand(check.argv);filePath = check.path ?? "";requiredText = check.text ?? "" }
         useSuggestedChecks = false
         job = record;events = [];diff = "";status = record.payload.message
@@ -95,7 +102,10 @@ import SwiftUI
                     if !active { await loadDiff(); break }
                     try await Task.sleep(nanoseconds:500_000_000)
                 } catch is CancellationError { return }
-                catch { status = error.localizedDescription; return }
+                catch {
+                    status = "Connection interrupted. Retrying the local service… "+error.localizedDescription
+                    try? await Task.sleep(nanoseconds:1_000_000_000)
+                }
             }
         }
     }
@@ -131,6 +141,24 @@ import SwiftUI
         do { let result: BuildDiff = try await client.request("/builds/"+id+"/diff");try Task.checkCancellation();guard job?.id == id else { return };diff = result.diff }
         catch { status = error.localizedDescription }
     }
+    func recheck() {
+        guard let client,let id = job?.id,!active,!busy else { return }
+        busy = true
+        Task { @MainActor in
+            defer { busy = false }
+            do { let value: BuildRecord = try await client.request("/builds/"+id+"/recheck",method:"POST",body:["approved":true,"max_seconds":180]);select(value) }
+            catch { status = error.localizedDescription }
+        }
+    }
+    func confirm(_ index: Int) {
+        guard let client,let id = job?.id,!active,!busy,let note = verificationNotes[index],!note.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty else { return }
+        busy = true
+        Task { @MainActor in
+            defer { busy = false }
+            do { let value: BuildRecord = try await client.request("/builds/"+id+"/criteria/"+String(index)+"/confirm",method:"POST",body:["approved":true,"evidence":note]);guard job?.id == id else { return };job = value;status = value.payload.message }
+            catch { status = error.localizedDescription }
+        }
+    }
 }
 
 @MainActor struct BuildView: View {
@@ -163,6 +191,10 @@ import SwiftUI
                             Text("One instruction per line, such as ‘Keep the current design’ or ‘Add no dependencies’.").font(.caption).foregroundStyle(.secondary)
                             TextEditor(text:$session.constraints).font(.body).frame(height:65).border(.secondary.opacity(0.25)).accessibilityLabel("Constraints")
                         }
+                        DisclosureGroup("What should be true when finished? (optional)",isExpanded:$session.showCriteria) {
+                            Text("One observable result per line. For a Copy button: ‘Copies the saved text’ and ‘Shows Copied’. You’ll confirm these after automated checks pass. Leave blank to review the goal as a whole.").font(.caption).foregroundStyle(.secondary)
+                            TextEditor(text:$session.successCriteria).font(.body).frame(height:75).border(.secondary.opacity(0.25)).accessibilityLabel("Success criteria")
+                        }
                         Divider()
                         Text("How we’ll check the changes").font(.headline)
                         if session.loadingChecks { ProgressView("Finding this project’s checks…") }
@@ -182,6 +214,7 @@ import SwiftUI
                                 }.padding(.vertical,3)
                             }
                             if !session.checkNotice.isEmpty { Text(session.checkNotice).font(.caption).foregroundStyle(.secondary) }
+                            if !session.projectMemory.isEmpty { DisclosureGroup("Last checks for this project") { Text(session.projectMemory).font(.caption).foregroundStyle(.secondary) } }
                         }
                         DisclosureGroup("Advanced options",isExpanded:$session.advanced) {
                             VStack(alignment:.leading,spacing:10) {
@@ -207,7 +240,7 @@ import SwiftUI
                     Text(session.readinessMessage).font(.caption).foregroundStyle(session.projectReady ? Color.secondary : Color.orange)
                     Button("Refresh project checks") { Task { await session.findChecks() } }.disabled(session.loadingChecks)
                     Text(session.useSuggestedChecks ? "Checks: "+session.suggestions.filter { session.selectedChecks.contains($0.id) }.map(\.title).joined(separator:", ") : "Check: Custom check").font(.caption).foregroundStyle(.secondary)
-                    Toggle("I approve this goal and the selected checks",isOn:$session.approved)
+                    Toggle("I approve this goal, criteria and checks",isOn:$session.approved)
                     Button("Start building") { session.start() }.buttonStyle(.borderedProminent).disabled(!session.canStart)
                     Text("Review changes before applying them. Your original files stay untouched.").font(.caption).foregroundStyle(.secondary)
                 }.padding(.horizontal,8)
@@ -215,23 +248,51 @@ import SwiftUI
                 ScrollView {
                     VStack(alignment:.leading,spacing:12) {
                         HStack {
-                            Text(session.job?.state.replacingOccurrences(of:"_",with:" ").capitalized ?? "Ready").font(.headline)
+                            Text(session.job?.outcome?.title ?? session.job?.state.replacingOccurrences(of:"_",with:" ").capitalized ?? "Ready").font(.headline)
                             Spacer()
                             if session.active { ProgressView().controlSize(.small) }
                         }
                         Text(session.status).textSelection(.enabled)
+                        if let outcome = session.job?.outcome, !session.active { Text(outcome.summary).font(.subheadline).textSelection(.enabled) }
                         if session.job != nil && !session.active {
                             Button("New build from this goal") { session.newBuild() }.disabled(session.busy)
                         }
                         if let job = session.job {
                             Text("Worker turn \(job.payload.turn) of \(job.spec.maxTurns)").font(.caption).foregroundStyle(.secondary)
                             if let path = job.payload.worktree { Text(path).font(.system(.caption,design:.monospaced)).textSelection(.enabled) }
+                            if !session.active { Button("Recheck only · no coding worker (up to 3 min)") { session.recheck() }.disabled(session.busy) }
+                            if let preflight = job.payload.preflight,!preflight.isEmpty {
+                                DisclosureGroup("Environment checks") {
+                                    ForEach(Array(preflight.enumerated()),id:\.offset) { _,item in
+                                        Text(item.label+" · "+(item.status == "blocked" ? "Couldn’t start" : item.status == "not_probed" ? "Checked when run" : "Runtime ready")).font(.subheadline)
+                                        if !item.reason.isEmpty { Text(item.reason).font(.caption) }
+                                        if let details = item.details,!details.isEmpty { Text(details).font(.system(.caption,design:.monospaced)).textSelection(.enabled) }
+                                    }
+                                }
+                            }
+                            if !job.payload.checks.isEmpty { Text("Automated evidence").font(.headline) }
                             ForEach(Array(job.payload.checks.enumerated()),id:\.offset) { _,check in
                                 VStack(alignment:.leading) {
-                                    Text((check.passed ? "Passed · " : "Failed · ")+check.label).font(.subheadline).bold()
+                                    Text(check.title).font(.subheadline).bold()
+                                    if let reason = check.reason,!reason.isEmpty { Text(reason).font(.caption).foregroundStyle(.secondary) }
                                     DisclosureGroup("Check output") { Text(check.details).font(.system(.caption,design:.monospaced)).textSelection(.enabled) }
                                 }
                             }
+                            if let criteria = job.payload.criteria,!criteria.isEmpty {
+                                Text("Requested behavior").font(.headline)
+                                Text("Passing tests alone doesn’t prove the goal. Record what you actually checked; confirmation is attributed to you.").font(.caption).foregroundStyle(.secondary)
+                                ForEach(Array(criteria.enumerated()),id:\.offset) { index,criterion in
+                                    VStack(alignment:.leading,spacing:5) {
+                                        Text((criterion.status == "confirmed" ? "Confirmed by you · " : "Needs review · ")+criterion.text).font(.subheadline).textSelection(.enabled)
+                                        Text(criterion.evidence).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
+                                        if job.state == "needs_review" && job.payload.checkStamp != nil && criterion.status != "confirmed" && !job.payload.checks.isEmpty && job.payload.checks.allSatisfy(\.passed) {
+                                            TextField("What did you test or observe?",text:Binding(get:{ session.verificationNotes[index] ?? "" },set:{ session.verificationNotes[index] = $0 }))
+                                            Button("I checked this behavior") { session.confirm(index) }.disabled(session.busy || (session.verificationNotes[index] ?? "").trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
+                                        }
+                                    }.padding(.vertical,4)
+                                }
+                            }
+                            if let summary = job.payload.workerSummary { DisclosureGroup("Worker report · not independent evidence") { Text(summary).font(.caption).textSelection(.enabled) } }
                         }
                         if let job = session.job,job.state == "needs_input",job.payload.turn < job.spec.maxTurns {
                             TextField("Your clarification",text:$session.answer)
@@ -258,6 +319,7 @@ import SwiftUI
         }.padding(20).frame(minWidth:800,minHeight:650).task { await session.connect() }
         .onChange(of:session.goal) { _ in session.approved = false }
         .onChange(of:session.constraints) { _ in session.approved = false }
+        .onChange(of:session.successCriteria) { _ in session.approved = false }
         .onChange(of:session.command) { _ in session.approved = false }
         .onChange(of:session.checkKind) { _ in session.approved = false }
         .onChange(of:session.filePath) { _ in session.approved = false }

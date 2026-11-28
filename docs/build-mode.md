@@ -55,13 +55,16 @@ installed automatically and direct network access in worker tools is disabled.
 1. Save the approved goal, constraints, checks, and budgets in SQLite.
 2. Create an isolated worktree from the selected source commit.
 3. Retrieve at most three relevant starting-code excerpts from that worktree.
-4. Start a Codex CLI turn with the approved scope and stream structured progress.
+4. Probe recognized runtimes inside the same sandbox before starting a worker.
+   Missing or blocked runtimes stop as **Blocked by setup**, with zero coding turns.
+   Custom executables have availability checked; unknown flags are never guessed.
+   Then start a Codex CLI turn with the approved scope and stream structured progress.
 5. Independently run the approved checks, including command checks inside a named
    Codex filesystem/network sandbox. A worker's “done” statement is insufficient.
 6. If a check fails, send its bounded output back as evidence for a targeted retry.
    Identical failures with unchanged diffs stop the loop. No evaluator model is
    called while the worker is making progress.
-7. Passing checks produces **Checks passed** and a diff preview for your review.
+7. Passing checks produces **Needs review** and a diff preview for your review.
    This is evidence for the criteria you selected, not proof of all possible
    behavior or semantic correctness. Nothing is automatically committed, merged,
    pushed, deployed, or sent to another person.
@@ -117,11 +120,13 @@ browser-origin requests. There is no MCP tool for silently approving a build.
 | `GET /builds/{id}/diff` | Bounded tracked/untracked diff preview |
 | `POST /builds/{id}/stop` | Cancel without a next turn |
 | `POST /builds/{id}/resume` | Explicit clarification with time allowance |
+| `POST /builds/{id}/recheck` | Approved runtime/check rerun in retained worktree; no coding worker |
+| `POST /builds/{id}/criteria/{index}/confirm` | Explicit user observation for one approved success criterion |
 
 Build records live in `<data>/builds/builds.sqlite3`; worktrees and worker reports
 live in `<data>/builds/<id>/`. Treat these as private project data. Current memory
-is the approved specification, progress/check history, current worktree and
-project-scoped prior builds. Automatic cross-build preference learning, model
+is the approved specification, progress/check history, current worktree,
+project-scoped prior builds, and the latest environment/check outcomes per project. Automatic cross-build preference learning, model
 weight updates, continuous screen recording, autonomous visual evaluation, and
 auto-merge are not implemented in this first version.
 
@@ -151,3 +156,53 @@ is excluded. Earlier optimized-review measurements were roughly 659 ms first and
 332 ms warm, so these samples support preserving startup behavior, not a new
 speedup claim. Raw measurements are local at
 `/tmp/prompt-aid-split-review-launch.json`.
+
+## Goal-specific evidence and outcomes
+
+**What should be true when finished?** accepts up to twelve observable success
+criteria, one per line. If blank, the approved goal is the criterion. These are
+fixed with the approved build specification. Regression-test commands and worker
+reports cannot confirm them automatically. After the checks pass, describe what
+you observed and choose **I checked this behavior** for each criterion. This is
+explicit human confirmation, attributed to you, not an autonomous UI test. For a
+clipboard change, test the actual copied text and confirmation message.
+
+- **Needs review:** tests passed but behavior is unconfirmed, or execution ended
+  before enough evidence was collected.
+- **Blocked by setup:** a runtime/check could not execute. Stop correction loops;
+  do not ask a worker to “fix” a feature because its environment is unavailable.
+- **Verified against approved criteria:** automated checks passed and you supplied
+  observations for every approved criterion. This is scoped evidence, not proof
+  of universal correctness, and never applies or merges the changes.
+- **Stopped:** explicit cancellation; work already completed is retained.
+
+The controller records bounded content snapshots before and after checks.
+A file change during the checks prevents confirmation until a clean recheck. Confirmation
+requires the same snapshot, and verified results become **Needs review** if the
+worktree changes. Up to 500 changed/untracked files, 2 MB per file and 20 MB total
+can be snapshotted; larger work requires review rather than a verified label.
+Dependency symlinks are excluded; this does not continuously monitor ignored
+dependencies or externally changing services.
+
+**Recheck only** explicitly reruns the existing approved checks for up to three
+minutes, in the same retained worktree, without any coding/model call or extra
+worker turns. It resets manual confirmations. Fix setup first or start a new
+build from the same goal; rechecking never installs dependencies or changes the
+approved test command. Historical sandbox failures also display **Blocked by
+setup** without rewriting their original event history.
+
+Installed Python.org framework versions and selected Homebrew runtime formulas
+are added as narrowly scoped read-only resources, so a linked `.venv` can load
+its shared library. Network remains disabled, credential-path rules remain, and
+there is no unrestricted fallback. Runtime probes are repeated each run: the
+SQLite `environment_memory` table remembers project-scoped outcomes for display,
+not permission grants or stale “safe to skip” decisions. Python/Node/Swift probes
+check runtime availability, not the completeness of every project dependency.
+
+A real retained Copy prompt build originally could not start Python because its
+framework library was blocked. With the runtime resource fix and direct installed
+macOS tools on PATH, **Recheck only** ran the same 50-test command in about 7.5
+seconds: 49 passed, one opt-in model test skipped. No coding/model call was made;
+the result correctly stayed **Needs review** pending clipboard interaction checks.
+Direct tool paths avoid repeated xcrun shim attempts to write a shared temp cache;
+they do not broaden temporary-directory permissions.

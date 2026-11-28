@@ -29,6 +29,7 @@ class StartBuild(Input):
     root:str=Field(min_length=1,max_length=4096)
     goal:str=Field(min_length=1,max_length=12000)
     constraints:list[Text]=Field(default_factory=list,max_length=20)
+    acceptance_criteria:list[Text]=Field(default_factory=list,max_length=12)
     checks:list[Check]=Field(min_length=1,max_length=8)
     max_turns:int=Field(default=3,ge=1,le=5)
     max_seconds:int=Field(default=600,ge=10,le=1800)
@@ -47,6 +48,22 @@ class ResumeBuild(Input):
         if self.approved is not True or not self.answer.strip():raise ValueError('Approve a nonempty clarification.')
         return self
 
+class RecheckBuild(Input):
+    approved:bool
+    max_seconds:int=Field(default=180,ge=10,le=600)
+    @model_validator(mode='after')
+    def approval(self):
+        if self.approved is not True:raise ValueError('Approve rerunning the existing checks.')
+        return self
+
+class ConfirmCriterion(Input):
+    approved:bool
+    evidence:str=Field(min_length=1,max_length=2000)
+    @model_validator(mode='after')
+    def approval(self):
+        if self.approved is not True or not self.evidence.strip():raise ValueError('Confirm the behavior and describe what you checked.')
+        return self
+
 def register(app,controller):
     @app.get('/builds/config')
     def config():return controller.config()
@@ -60,7 +77,7 @@ def register(app,controller):
         ready=repository.returncode==0 and repository.stdout.strip()==root
         if ready:
             ready=git(root,'rev-parse','--verify','HEAD',check=False).returncode==0 and not git(root,'status','--porcelain').stdout.strip()
-        return {'root':root,**result,'ready':ready,'readiness_message':
+        return {'root':root,**result,'environment_memory':controller.store.environment(root),'ready':ready,'readiness_message':
             'Your project is ready. Changes will be made in a separate worktree.' if ready else
             'Save a clean Git checkpoint before starting: commit or stash your changes. Prompt Aid will leave your original files untouched.'}
     @app.get('/builds')
@@ -71,6 +88,10 @@ def register(app,controller):
     def build(id:str):return controller.store.get(id)
     @app.post('/builds/{id}/resume')
     def resume(id:str,body:ResumeBuild):return controller.resume(id,body.answer,body.max_seconds)
+    @app.post('/builds/{id}/recheck')
+    def recheck(id:str,body:RecheckBuild):return controller.recheck(id,body.max_seconds)
+    @app.post('/builds/{id}/criteria/{index}/confirm')
+    def confirm(id:str,index:int,body:ConfirmCriterion):return controller.attest(id,index,body.evidence)
     @app.get('/builds/{id}/events')
     def events(id:str,after:int=0):return {'events':controller.store.events(id,max(0,after))}
     @app.get('/builds/{id}/diff')

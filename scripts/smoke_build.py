@@ -26,7 +26,7 @@ def main():
             time.sleep(.5)
         print(json.dumps(job,indent=2),flush=True)
         print('DIFF\n'+controller.diff(job['id']))
-        assert job['state']=='checks_passed',store.events(job['id'])
+        assert job['state']=='needs_review' and all(c['passed'] for c in job['payload']['checks']),store.events(job['id'])
         assert 'a - b' in (root/'math_utils.py').read_text(),'Source project was modified.'
         (directory/'last-result.json').write_text(json.dumps(job,indent=2))
     finally:controller.close();workspace.close()

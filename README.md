@@ -118,3 +118,8 @@ A host may expose the tool without rendering its UI. In that case, the assistant
 ```sh
 npm test
 ```
+
+Build mode separates automated regression checks from goal-specific evidence.
+Runtime preflight catches setup failures before a coding attempt; a result stays
+**Needs review** until the user confirms the approved behavior. Retained work can
+be rechecked without another model call. See [Build evidence and outcomes](docs/build-mode.md#goal-specific-evidence-and-outcomes).

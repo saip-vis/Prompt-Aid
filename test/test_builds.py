@@ -38,16 +38,16 @@ class BuildTests(BuildFixture):
             self.assertIn('Preserve README.md',prompt);(root/'result.txt').write_text('ready')
             return {'status':'completed','summary':'Created the file.','question':''}
         controller=self.controller(worker);job=controller.start(self.spec());final=wait(controller,job['id'])
-        self.assertEqual(final['state'],'checks_passed');self.assertFalse((self.root/'result.txt').exists())
+        self.assertEqual(final['state'],'needs_review');self.assertFalse((self.root/'result.txt').exists())
         self.assertIn('ready',controller.diff(job['id']));self.assertTrue(final['payload']['checks'][0]['passed'])
-        self.assertEqual(controller.stop(job['id'])['state'],'checks_passed')
+        self.assertEqual(controller.stop(job['id'])['state'],'needs_review')
     def test_failed_check_causes_targeted_correction_then_pass(self):
         calls=[]
         def worker(prompt,root,turn,stop):
             calls.append(prompt);(root/'result.txt').write_text('wrong' if turn==1 else 'ready')
             return {'status':'completed','summary':'Attempt '+str(turn),'question':''}
         controller=self.controller(worker);job=controller.start(self.spec());final=wait(controller,job['id'])
-        self.assertEqual(final['state'],'checks_passed');self.assertEqual(len(calls),2);self.assertIn('Required text missing.',calls[1])
+        self.assertEqual(final['state'],'needs_review');self.assertEqual(len(calls),2);self.assertIn('Required text missing.',calls[1])
         self.assertTrue(any(e['kind']=='correction' for e in self.store.events(job['id'])))
     def test_stalled_worker_and_turn_budget_stop_the_loop(self):
         def worker(*_):return {'status':'completed','summary':'Done','question':''}
@@ -111,7 +111,7 @@ class ResumeBuildTests(BuildFixture):
         controller=self.controller(worker);job=controller.start(self.spec());first=wait(controller,job['id'])
         time.sleep(.03)
         controller.resume(job['id'],'Use ready',30);second=wait(controller,job['id'])
-        self.assertEqual(second['state'],'checks_passed');self.assertEqual(second['payload']['turn'],2)
+        self.assertEqual(second['state'],'needs_review');self.assertEqual(second['payload']['turn'],2)
         self.assertEqual(second['payload']['worktree'],first['payload']['worktree'])
 
 class BuildAPITests(BuildFixture):
@@ -136,7 +136,7 @@ class BuildAPITests(BuildFixture):
             self.assertEqual(client.post('/builds',headers=headers,json={**self.spec(),'root':str(self.directory)}).status_code,400)
             response=client.post('/builds',headers=headers,json=self.spec());self.assertEqual(response.status_code,200)
             id=response.json()['id'];wait(controller,id)
-            self.assertEqual(client.get('/builds/'+id,headers=headers).json()['state'],'checks_passed')
+            self.assertEqual(client.get('/builds/'+id,headers=headers).json()['state'],'needs_review')
             self.assertTrue(client.get('/builds/'+id+'/events',headers=headers).json()['events'])
             self.assertIn('ready',client.get('/builds/'+id+'/diff',headers=headers).json()['diff'])
             self.assertEqual(client.post('/builds/'+id+'/resume',headers=headers,json={'answer':'go','approved':False}).status_code,422)
